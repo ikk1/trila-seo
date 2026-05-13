@@ -13,7 +13,7 @@
   --color-surface-2:   rgb(242 238 238);   /* slightly deeper     */
   --color-text-main:   rgb(28 25 26);      /* near-black          */
   --color-text-muted:  rgb(120 110 114);   /* warm-muted          */
-  --color-border:      rgb(0 0 0);         /* black (used with opacity) */
+  --color-border:      rgb(0 0 0 / 0.10);  /* soft border, light theme  */
 
   /* Semantic status colors */
   --color-success:     rgb(16 185 129);    /* emerald-500 */
@@ -43,29 +43,26 @@
 
 /* ─── Non-token variables ─────────────────────────────────── */
 :root {
-  --radius-base: 12px;
   --spacing-card-padding: 1rem;
   --spacing-gap: 0.75rem;
   --touch-target-min: 44px;
-  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
 }
 
 /* ─── Base ────────────────────────────────────────────────── */
 @layer base {
   * {
-    border-color: rgb(0 0 0 / 0.10);
+    border-color: var(--color-border);
     -webkit-tap-highlight-color: transparent;
   }
 
   html {
     scroll-behavior: smooth;
-    font-size: 16px;
   }
 
   body {
     background-color: rgb(255 255 255);
     color: rgb(28 25 26);
-    font-family: var(--font-body);
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     min-height: 100dvh;
@@ -76,41 +73,41 @@
     font-size: 1.5rem;
     font-weight: 800;
     letter-spacing: -0.025em;
-    font-family: var(--font-display, "Outfit", system-ui, sans-serif);
+    font-family: var(--font-display);
   }
 
   h2 {
     font-size: 1.25rem;
     font-weight: 600;
-    font-family: var(--font-display, "Outfit", system-ui, sans-serif);
+    font-family: var(--font-display);
   }
 
   h3 {
     font-size: 1.125rem;
     font-weight: 600;
-    font-family: var(--font-display, "Outfit", system-ui, sans-serif);
+    font-family: var(--font-display);
   }
-}
 
-/* ─── Custom Scrollbar ────────────────────────────────────── */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgb(0 0 0 / 0.15) transparent;
-}
+  /* ─── Custom Scrollbar ──────────────────────────────────── */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(0 0 0 / 0.15) transparent;
+  }
 
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgb(0 0 0 / 0.15);
-  border-radius: 99px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgb(0 0 0 / 0.28);
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(0 0 0 / 0.15);
+    border-radius: 99px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(0 0 0 / 0.28);
+  }
 }
 
 /* ─── Reduced Motion ──────────────────────────────────────── */

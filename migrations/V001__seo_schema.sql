@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS seo.vertical (
   cnaes                   text[]   NOT NULL,
   artigo                  char(1)  NOT NULL CHECK (artigo IN ('o','a')),
   active                  boolean  NOT NULL DEFAULT true,
-  priority                smallint NOT NULL DEFAULT 5,  -- 1=P0, 2=P1, 3=P2
+  priority                smallint NOT NULL DEFAULT 3 CHECK (priority BETWEEN 1 AND 3),  -- 1=P0, 2=P1, 3=P2
   created_at              timestamptz NOT NULL DEFAULT now()
 );
 
@@ -105,6 +105,8 @@ CREATE TABLE IF NOT EXISTS seo.cnae_establishments_neighborhood (
   total_ativos     integer NOT NULL,
   PRIMARY KEY (neighborhood_id, cnae, snapshot_date)
 );
+CREATE INDEX IF NOT EXISTS cnae_est_nbhd_recent_idx
+  ON seo.cnae_establishments_neighborhood (neighborhood_id, cnae, snapshot_date DESC);
 
 CREATE TABLE IF NOT EXISTS seo.seasonality (
   vertical_slug  text     NOT NULL REFERENCES seo.vertical(slug),

@@ -28,6 +28,7 @@ export const metadata: Metadata = {
   description:
     'Sistema completo para salão de beleza, barbearia, clínica estética e spa. Agenda online 24h, WhatsApp integrado, PIX nativo, comissões automáticas e IA financeira.',
   openGraph: {
+    url: BASE,
     siteName: 'Trila',
     locale: 'pt_BR',
     type: 'website',
@@ -35,13 +36,12 @@ export const metadata: Metadata = {
   },
   twitter: { card: 'summary_large_image' },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
-  alternates: { canonical: BASE },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${outfit.variable} ${plusJakarta.variable}`}>
-      <body className="min-h-screen">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

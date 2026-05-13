@@ -1,5 +1,6 @@
 // app/page.tsx
-export const metadata = {
+import type { Metadata } from 'next';
+export const metadata: Metadata = {
   title: 'Sistema de Gestão para Salões, Barbearias e Clínicas',
   alternates: { canonical: 'https://trila.app.br' },
 };

@@ -1,26 +1,124 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* ─── Design Tokens — Trila Brand (Light Theme) ──────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* ── Colors ── */
+  --color-primary:     rgb(158 90 82);     /* #9e5a52 brick-rose  */
+  --color-primary-dark: rgb(138 70 62);    /* #8a463e brick-dark  */
+  --color-secondary:   rgb(167 139 164);   /* #a78ba4 mauve       */
+
+  /* Light theme overrides */
+  --color-background:  rgb(255 255 255);   /* white               */
+  --color-surface:     rgb(249 247 247);   /* warm off-white      */
+  --color-surface-2:   rgb(242 238 238);   /* slightly deeper     */
+  --color-text-main:   rgb(28 25 26);      /* near-black          */
+  --color-text-muted:  rgb(120 110 114);   /* warm-muted          */
+  --color-border:      rgb(0 0 0);         /* black (used with opacity) */
+
+  /* Semantic status colors */
+  --color-success:     rgb(16 185 129);    /* emerald-500 */
+  --color-error:       rgb(239 68 68);     /* red-500     */
+  --color-warning:     rgb(245 158 11);    /* amber-500   */
+  --color-info:        rgb(14 165 233);    /* sky-500     */
+
+  /* ── Typography ── */
+  --font-sans:    "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-display: "Outfit", system-ui, sans-serif;
+
+  /* ── Border Radius ── */
+  --radius:    0.75rem;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  /* ── Box Shadows ── */
+  --shadow-card:       0 1px 3px 0 rgb(0 0 0 / 0.08), 0 1px 2px -1px rgb(0 0 0 / 0.08);
+  --shadow-card-hover: 0 8px 25px -5px rgb(0 0 0 / 0.12), 0 4px 10px -4px rgb(0 0 0 / 0.08);
+  --shadow-glow:       0 0 20px rgb(158 90 82 / 0.15);
+  --shadow-modal:      0 -4px 40px rgb(0 0 0 / 0.1), 0 0 80px rgb(158 90 82 / 0.04);
+
+  /* ── Screens ── */
+  --breakpoint-xs: 375px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ─── Non-token variables ─────────────────────────────────── */
+:root {
+  --radius-base: 12px;
+  --spacing-card-padding: 1rem;
+  --spacing-gap: 0.75rem;
+  --touch-target-min: 44px;
+  --font-body: "Plus Jakarta Sans", system-ui, sans-serif;
+}
+
+/* ─── Base ────────────────────────────────────────────────── */
+@layer base {
+  * {
+    border-color: rgb(0 0 0 / 0.10);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
+
+  body {
+    background-color: rgb(255 255 255);
+    color: rgb(28 25 26);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    font-family: var(--font-display, "Outfit", system-ui, sans-serif);
+  }
+
+  h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    font-family: var(--font-display, "Outfit", system-ui, sans-serif);
+  }
+
+  h3 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    font-family: var(--font-display, "Outfit", system-ui, sans-serif);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ─── Custom Scrollbar ────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(0 0 0 / 0.15) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(0 0 0 / 0.15);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(0 0 0 / 0.28);
+}
+
+/* ─── Reduced Motion ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

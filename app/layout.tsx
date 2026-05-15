@@ -1,6 +1,6 @@
-// app/layout.tsx
 import type { Metadata } from 'next';
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
+import { BRAND_NAME, DEFAULT_OG_IMAGE, SITE_URL } from '@/lib/site';
 import './globals.css';
 
 const outfit = Outfit({
@@ -17,24 +17,28 @@ const plusJakarta = Plus_Jakarta_Sans({
   weight: ['400', '500', '600', '700'],
 });
 
-const BASE = 'https://trila.app.br';
-
 export const metadata: Metadata = {
-  metadataBase: new URL(BASE),
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: 'Trila — Sistema para Salão de Beleza, Barbearia e Clínica',
-    template: '%s | Trila',
+    default: 'Trila - Sistema para salão de beleza, barbearia e clínica',
+    template: `%s | ${BRAND_NAME}`,
   },
   description:
-    'Sistema completo para salão de beleza, barbearia, clínica estética e spa. Agenda online 24h, WhatsApp integrado, PIX nativo, comissões automáticas e IA financeira.',
+    'Sistema completo para salão de beleza, barbearia, clínica estética e spa. Agenda online, WhatsApp, financeiro e operação no mesmo fluxo.',
+  alternates: {
+    canonical: SITE_URL,
+  },
   openGraph: {
-    url: BASE,
-    siteName: 'Trila',
+    url: SITE_URL,
+    siteName: BRAND_NAME,
     locale: 'pt_BR',
     type: 'website',
-    images: [{ url: '/og-default.png', width: 1200, height: 630 }],
+    images: [{ url: DEFAULT_OG_IMAGE, width: 1200, height: 630 }],
   },
-  twitter: { card: 'summary_large_image' },
+  twitter: {
+    card: 'summary_large_image',
+    images: [DEFAULT_OG_IMAGE],
+  },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
 };
 

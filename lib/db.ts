@@ -1,16 +1,12 @@
 // lib/db.ts
 import { Pool } from 'pg';
 
-declare global {
-  // eslint-disable-next-line no-var
-  var _pgPool: Pool | undefined;
-}
+let pool: Pool | undefined;
 
-function createPool(): Pool {
+export function getDbPool(): Pool {
+  if (pool) return pool;
   const url = process.env.SEO_DB_URL;
   if (!url) throw new Error('SEO_DB_URL is not set');
-  return new Pool({ connectionString: url, max: 5, idleTimeoutMillis: 30_000 });
+  pool = new Pool({ connectionString: url, max: 5, idleTimeoutMillis: 30_000 });
+  return pool;
 }
-
-// Reuse pool across hot reloads in dev to avoid exhausting connections.
-export const db: Pool = globalThis._pgPool ?? (globalThis._pgPool = createPool());

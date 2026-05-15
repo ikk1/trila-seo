@@ -7,6 +7,7 @@ import {
   buildSoftwareJsonLd,
 } from '@/lib/seo';
 import { APP_URL } from '@/lib/site';
+import { CITIES } from '@/lib/cities';
 import { VERTICALS } from '@/lib/verticals';
 
 export const metadata = buildMetadata({
@@ -131,6 +132,30 @@ export default function HomePage() {
               <span className="mt-6 inline-flex font-semibold text-primary">
                 Ver página da vertical
               </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 pb-20">
+        <div className="max-w-3xl">
+          <h2>Mercados prioritários</h2>
+          <p className="mt-4 text-lg leading-8 text-text-muted">
+            Começamos por cidades com forte densidade de negócios de beleza e estética.
+          </p>
+        </div>
+        <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+          {CITIES.slice(0, 8).map((city) => (
+            <Link
+              key={`${city.uf}-${city.slug}`}
+              href={`/${city.uf}/${city.slug}`}
+              className="rounded-[24px] border border-black/6 bg-white p-5 shadow-[var(--shadow-card)] transition-transform hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]"
+            >
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">
+                {city.region}
+              </p>
+              <h3 className="mt-3 text-xl text-text-main">{city.city}</h3>
+              <p className="mt-3 text-sm leading-6 text-text-muted">{city.marketNote}</p>
             </Link>
           ))}
         </div>

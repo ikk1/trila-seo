@@ -1,8 +1,11 @@
 import type { MetadataRoute } from 'next';
-import { DEFAULT_LAST_MODIFIED, SITE_URL } from '@/lib/site';
+import { loadCities } from '@/lib/locations';
 import { VERTICALS } from '@/lib/verticals';
+import { DEFAULT_LAST_MODIFIED, SITE_URL } from '@/lib/site';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const cities = await loadCities();
+
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: SITE_URL,
@@ -18,6 +21,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
+  const cityPages: MetadataRoute.Sitemap = cities.map((city) => ({
+    url: `${SITE_URL}/${city.uf}/${city.slug}`,
+    lastModified: DEFAULT_LAST_MODIFIED,
+    changeFrequency: 'weekly',
+    priority: 0.75,
+  }));
+
+  const cityVerticalPages: MetadataRoute.Sitemap = cities.flatMap((city) =>
+    VERTICALS.map((vertical) => ({
+      url: `${SITE_URL}/${city.uf}/${city.slug}/${vertical.slug}`,
+      lastModified: DEFAULT_LAST_MODIFIED,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    }))
+  );
+
   const verticalPages: MetadataRoute.Sitemap = VERTICALS.map((vertical) => ({
     url: `${SITE_URL}/sistema-para-${vertical.slug}`,
     lastModified: DEFAULT_LAST_MODIFIED,
@@ -25,5 +44,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [...staticPages, ...verticalPages];
+  return [...staticPages, ...cityPages, ...cityVerticalPages, ...verticalPages];
 }

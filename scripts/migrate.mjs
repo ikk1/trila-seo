@@ -1,6 +1,5 @@
-// scripts/migrate.ts
 // Applies pending V* migrations from migrations/ directory.
-// Usage: SEO_DB_URL=<url> npx tsx scripts/migrate.ts
+// Usage: SEO_DB_URL=<url> node scripts/migrate.mjs
 import { readdir, readFile } from 'fs/promises';
 import path from 'path';
 import { Pool } from 'pg';
@@ -19,7 +18,7 @@ async function main() {
       )
     `);
 
-    const { rows } = await pool.query<{ version: string }>(
+    const { rows } = await pool.query(
       'SELECT version FROM seo.schema_migrations ORDER BY version'
     );
     const applied = new Set(rows.map((r) => r.version));
@@ -47,9 +46,9 @@ async function main() {
         );
         await client.query('COMMIT');
         console.log(`  done  ${file}`);
-      } catch (err) {
+      } catch (error) {
         await client.query('ROLLBACK');
-        throw err;
+        throw error;
       } finally {
         client.release();
       }
@@ -61,4 +60,7 @@ async function main() {
   }
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

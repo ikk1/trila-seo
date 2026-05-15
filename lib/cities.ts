@@ -3,6 +3,7 @@ export interface CityEntry {
   city: string;
   slug: string;
   region: string;
+  population: number;
   populationLabel: string;
   isCapital: boolean;
   marketNote: string;
@@ -14,6 +15,7 @@ export const CITIES: CityEntry[] = [
     city: 'São Paulo',
     slug: 'sao-paulo',
     region: 'Sudeste',
+    population: 12325000,
     populationLabel: 'cerca de 12,3 milhões de habitantes',
     isCapital: true,
     marketNote: 'Maior mercado do país, com alta densidade de negócios de beleza e estética.',
@@ -23,6 +25,7 @@ export const CITIES: CityEntry[] = [
     city: 'Rio de Janeiro',
     slug: 'rio-de-janeiro',
     region: 'Sudeste',
+    population: 6748000,
     populationLabel: 'cerca de 6,7 milhões de habitantes',
     isCapital: true,
     marketNote: 'Mercado grande e competitivo, com forte demanda por agenda e recorrência.',
@@ -32,6 +35,7 @@ export const CITIES: CityEntry[] = [
     city: 'Brasília',
     slug: 'brasilia',
     region: 'Centro-Oeste',
+    population: 3055149,
     populationLabel: 'cerca de 3,0 milhões de habitantes',
     isCapital: true,
     marketNote: 'Operação com ticket médio mais alto e expectativa de experiência premium.',
@@ -41,6 +45,7 @@ export const CITIES: CityEntry[] = [
     city: 'Belo Horizonte',
     slug: 'belo-horizonte',
     region: 'Sudeste',
+    population: 2315560,
     populationLabel: 'cerca de 2,7 milhões de habitantes',
     isCapital: true,
     marketNote: 'Base urbana forte para salões, clínicas e operações multi-serviço.',
@@ -50,6 +55,7 @@ export const CITIES: CityEntry[] = [
     city: 'Salvador',
     slug: 'salvador',
     region: 'Nordeste',
+    population: 2861953,
     populationLabel: 'cerca de 2,9 milhões de habitantes',
     isCapital: true,
     marketNote: 'Mercado com forte potencial para recorrência e aquisição local.',
@@ -59,6 +65,7 @@ export const CITIES: CityEntry[] = [
     city: 'Fortaleza',
     slug: 'fortaleza',
     region: 'Nordeste',
+    population: 2686612,
     populationLabel: 'cerca de 2,6 milhões de habitantes',
     isCapital: true,
     marketNote: 'Cidade com operação intensa e demanda consistente por agenda organizada.',
@@ -68,6 +75,7 @@ export const CITIES: CityEntry[] = [
     city: 'Recife',
     slug: 'recife',
     region: 'Nordeste',
+    population: 1653461,
     populationLabel: 'cerca de 1,7 milhão de habitantes',
     isCapital: true,
     marketNote: 'Mercado forte para clínicas, spas e operações com fluxo recorrente.',
@@ -77,6 +85,7 @@ export const CITIES: CityEntry[] = [
     city: 'Curitiba',
     slug: 'curitiba',
     region: 'Sul',
+    population: 1963726,
     populationLabel: 'cerca de 1,8 milhão de habitantes',
     isCapital: true,
     marketNote: 'Ambiente urbano maduro para posicionamento mais sofisticado.',
@@ -86,6 +95,7 @@ export const CITIES: CityEntry[] = [
     city: 'Manaus',
     slug: 'manaus',
     region: 'Norte',
+    population: 2255903,
     populationLabel: 'cerca de 2,2 milhões de habitantes',
     isCapital: true,
     marketNote: 'Cidade grande com oportunidade para padronização operacional.',
@@ -95,6 +105,7 @@ export const CITIES: CityEntry[] = [
     city: 'Goiânia',
     slug: 'goiania',
     region: 'Centro-Oeste',
+    population: 1500000,
     populationLabel: 'cerca de 1,5 milhão de habitantes',
     isCapital: true,
     marketNote: 'Mercado relevante para salão, estética e barbearia com foco em recorrência.',
@@ -104,6 +115,7 @@ export const CITIES: CityEntry[] = [
     city: 'Porto Alegre',
     slug: 'porto-alegre',
     region: 'Sul',
+    population: 1332570,
     populationLabel: 'cerca de 1,3 milhão de habitantes',
     isCapital: true,
     marketNote: 'Base urbana sólida para posicionamento e oferta de valor mais clara.',
@@ -113,6 +125,7 @@ export const CITIES: CityEntry[] = [
     city: 'Florianópolis',
     slug: 'florianopolis',
     region: 'Sul',
+    population: 508826,
     populationLabel: 'cerca de 500 mil habitantes',
     isCapital: true,
     marketNote: 'Mercado menor, porém com forte aderência a marcas premium.',

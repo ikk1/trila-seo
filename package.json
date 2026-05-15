@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "db:migrate": "npx tsx scripts/migrate.ts"
+    "db:migrate": "node scripts/migrate.mjs",
+    "db:seed:cities": "node scripts/seed-cities.mjs",
+    "db:sync:cities": "node scripts/sync-cities.mjs"
   },
   "dependencies": {
     "next": "16.2.6",

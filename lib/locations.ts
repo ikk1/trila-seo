@@ -3,7 +3,6 @@ import { CITIES, type CityEntry } from './cities';
 
 export type ResolvedCityEntry = CityEntry & {
   source: 'catalog' | 'seo.city';
-  populationValue?: number;
 };
 
 function formatPopulation(population?: number) {
@@ -24,13 +23,13 @@ function mapDbRow(row: {
     city: row.name,
     slug: row.slug,
     region: row.region,
+    population: row.populacao,
     populationLabel: formatPopulation(row.populacao),
     isCapital: row.capital,
     marketNote: row.capital
       ? 'Capital com maior densidade de negócios e necessidade de operação previsível.'
       : 'Mercado regional relevante para ganho de escala com gestão mais organizada.',
     source: 'seo.city',
-    populationValue: row.populacao,
   };
 }
 

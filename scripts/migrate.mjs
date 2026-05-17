@@ -11,6 +11,8 @@ async function main() {
   const pool = new Pool({ connectionString: url, max: 1 });
 
   try {
+    await pool.query(`CREATE SCHEMA IF NOT EXISTS seo`);
+
     await pool.query(`
       CREATE TABLE IF NOT EXISTS seo.schema_migrations (
         version     text        PRIMARY KEY,

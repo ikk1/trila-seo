@@ -11,6 +11,7 @@ function formatPopulation(population?: number) {
 }
 
 function mapDbRow(row: {
+  id: number;
   uf: string;
   name: string;
   slug: string;
@@ -20,6 +21,7 @@ function mapDbRow(row: {
 }): ResolvedCityEntry {
   return {
     uf: row.uf.toLowerCase(),
+    id: row.id,
     city: row.name,
     slug: row.slug,
     region: row.region,
@@ -41,6 +43,7 @@ export async function loadCities(): Promise<ResolvedCityEntry[]> {
   try {
     const pool = getDbPool();
     const { rows } = await pool.query<{
+      id: number;
       uf: string;
       name: string;
       slug: string;
@@ -48,7 +51,7 @@ export async function loadCities(): Promise<ResolvedCityEntry[]> {
       populacao: number;
       region: string;
     }>(`
-      SELECT c.uf, c.name, c.slug, c.capital, c.populacao, u.region
+      SELECT c.id, c.uf, c.name, c.slug, c.capital, c.populacao, u.region
       FROM seo.city c
       JOIN seo.uf u ON u.code = c.uf
       ORDER BY c.populacao DESC, c.name ASC

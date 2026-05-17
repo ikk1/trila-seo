@@ -1,4 +1,5 @@
 export interface CityEntry {
+  id?: number;
   uf: string;
   city: string;
   slug: string;

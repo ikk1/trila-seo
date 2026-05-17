@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { JsonLd } from '@/components/JsonLd';
+import { loadCities } from '@/lib/locations';
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildMetadata } from '@/lib/seo';
 import { APP_URL } from '@/lib/site';
 import { VERTICALS, getVerticalBySlug } from '@/lib/verticals';
@@ -32,6 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function VerticalPage({ params }: PageProps) {
   const { vertical } = await params;
   const content = getVerticalBySlug(vertical);
+  const cities = await loadCities();
 
   if (!content) {
     notFound();
@@ -128,6 +130,30 @@ export default async function VerticalPage({ params }: PageProps) {
               <h3>{faq.question}</h3>
               <p className="mt-3 leading-7 text-text-muted">{faq.answer}</p>
             </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-16">
+        <div className="max-w-3xl">
+          <h2>Mercados locais em destaque para {content.singular}</h2>
+          <p className="mt-4 leading-8 text-text-muted">
+            Estas páginas conectam a vertical com cidades prioritárias já publicadas no índice local.
+          </p>
+        </div>
+        <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {cities.slice(0, 8).map((city) => (
+            <Link
+              key={`${city.uf}-${city.slug}-${content.slug}`}
+              href={`/${city.uf}/${city.slug}/${content.slug}`}
+              className="rounded-[20px] border border-black/6 bg-white p-5 shadow-[var(--shadow-card)] transition-transform hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]"
+            >
+              <p className="text-sm font-semibold uppercase tracking-[0.14em] text-primary">
+                {city.region}
+              </p>
+              <h3 className="mt-3 text-xl">{city.city}</h3>
+              <p className="mt-3 text-sm leading-6 text-text-muted">{city.marketNote}</p>
+            </Link>
           ))}
         </div>
       </section>

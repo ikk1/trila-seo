@@ -19,6 +19,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'weekly',
       priority: 0.9,
     },
+    {
+      url: `${SITE_URL}/cidades`,
+      lastModified: DEFAULT_LAST_MODIFIED,
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    },
   ];
 
   const cityPages: MetadataRoute.Sitemap = cities.map((city) => ({

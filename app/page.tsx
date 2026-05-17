@@ -6,8 +6,8 @@ import {
   buildOrganizationJsonLd,
   buildSoftwareJsonLd,
 } from '@/lib/seo';
+import { loadCities } from '@/lib/locations';
 import { APP_URL } from '@/lib/site';
-import { CITIES } from '@/lib/cities';
 import { VERTICALS } from '@/lib/verticals';
 
 export const metadata = buildMetadata({
@@ -38,7 +38,9 @@ const sections = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const cities = await loadCities();
+
   return (
     <main className="bg-background">
       <JsonLd data={buildOrganizationJsonLd()} />
@@ -70,6 +72,12 @@ export default function HomePage() {
                 className="inline-flex min-h-11 items-center justify-center rounded-xl border border-black/10 bg-white px-6 py-3 font-semibold text-text-main transition-colors hover:bg-surface"
               >
                 Ver como a Trila se posiciona
+              </Link>
+              <Link
+                href="/cidades"
+                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-black/10 bg-white px-6 py-3 font-semibold text-text-main transition-colors hover:bg-surface"
+              >
+                Ver cidades priorizadas
               </Link>
             </div>
             <ul className="mt-8 grid gap-3 text-sm text-text-muted sm:grid-cols-3">
@@ -145,7 +153,7 @@ export default function HomePage() {
           </p>
         </div>
         <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-          {CITIES.slice(0, 8).map((city) => (
+          {cities.slice(0, 8).map((city) => (
             <Link
               key={`${city.uf}-${city.slug}`}
               href={`/${city.uf}/${city.slug}`}
@@ -158,6 +166,11 @@ export default function HomePage() {
               <p className="mt-3 text-sm leading-6 text-text-muted">{city.marketNote}</p>
             </Link>
           ))}
+        </div>
+        <div className="mt-8">
+          <Link href="/cidades" className="font-semibold text-primary">
+            Ver índice completo de cidades
+          </Link>
         </div>
       </section>
     </main>

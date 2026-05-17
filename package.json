@@ -8,7 +8,8 @@
     "start": "next start",
     "db:migrate": "node scripts/migrate.mjs",
     "db:seed:cities": "node scripts/seed-cities.mjs",
-    "db:sync:cities": "node scripts/sync-cities.mjs"
+    "db:sync:cities": "node scripts/generate-city-assets.mjs",
+    "db:generate:cities": "node scripts/generate-city-assets.mjs"
   },
   "dependencies": {
     "next": "16.2.6",

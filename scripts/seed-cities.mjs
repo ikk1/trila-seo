@@ -1,5 +1,4 @@
 import { Pool } from 'pg';
-import { CITY_SEEDS } from './city-seed-data.mjs';
 
 function bboxCenter(topology) {
   const [sx, sy] = topology.transform.scale;
@@ -30,6 +29,30 @@ function bboxCenter(topology) {
   };
 }
 
+function slugify(text) {
+  return text
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function municipalityUf(municipality) {
+  return (
+    municipality.microrregiao?.mesorregiao?.UF ??
+    municipality['regiao-imediata']?.['regiao-intermediaria']?.UF
+  );
+}
+
+const CAPITALS = new Set([
+  'Rio Branco', 'Maceió', 'Macapá', 'Manaus', 'Salvador', 'Fortaleza', 'Brasília',
+  'Vitória', 'Goiânia', 'São Luís', 'Cuiabá', 'Campo Grande', 'Belo Horizonte',
+  'Belém', 'João Pessoa', 'Curitiba', 'Recife', 'Teresina', 'Rio de Janeiro',
+  'Natal', 'Porto Velho', 'Boa Vista', 'Porto Alegre', 'Florianópolis', 'São Paulo',
+  'Aracaju', 'Palmas',
+]);
+
 async function fetchMunicipalities() {
   const response = await fetch('https://servicodados.ibge.gov.br/api/v1/localidades/municipios?orderBy=nome');
   if (!response.ok) throw new Error(`Failed to fetch IBGE municipalities: ${response.status}`);
@@ -42,69 +65,72 @@ async function fetchTopology(id) {
   return response.json();
 }
 
+async function mapWithConcurrency(items, limit, mapper) {
+  const results = new Array(items.length);
+  let cursor = 0;
+
+  async function worker() {
+    while (cursor < items.length) {
+      const current = cursor;
+      cursor += 1;
+      results[current] = await mapper(items[current], current);
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return results;
+}
+
 async function main() {
   const url = process.env.SEO_DB_URL;
   if (!url) throw new Error('SEO_DB_URL env var required');
 
-  const pool = new Pool({ connectionString: url, max: 1 });
+  const pool = new Pool({ connectionString: url, max: 8 });
 
   try {
     const municipalities = await fetchMunicipalities();
-    const byNameUf = new Map(
-      municipalities.map((m) => {
-        const uf = m.microrregiao?.mesorregiao?.UF?.sigla ?? m['regiao-imediata']?.['regiao-intermediaria']?.UF?.sigla;
-        if (!uf) {
-          throw new Error(`Missing UF for municipality ${m.nome}`);
+    const valid = municipalities.filter((m) => municipalityUf(m) != null);
+    console.log(`Processing ${valid.length} municipalities (${municipalities.length - valid.length} skipped — no UF data)...`);
+
+    let seeded = 0;
+    let failed = 0;
+
+    await mapWithConcurrency(valid, 8, async (municipality) => {
+      try {
+        const uf = municipalityUf(municipality);
+        const topology = await fetchTopology(municipality.id);
+        const { lon, lat } = bboxCenter(topology);
+        const slug = slugify(municipality.nome);
+        const isCapital = CAPITALS.has(municipality.nome);
+
+        await pool.query(
+          `INSERT INTO seo.city (id, uf, name, slug, capital, populacao, lat, lon)
+           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+           ON CONFLICT (id) DO UPDATE SET
+             uf        = EXCLUDED.uf,
+             name      = EXCLUDED.name,
+             slug      = EXCLUDED.slug,
+             capital   = EXCLUDED.capital,
+             populacao = EXCLUDED.populacao,
+             lat       = EXCLUDED.lat,
+             lon       = EXCLUDED.lon,
+             updated_at = now()`,
+          [municipality.id, uf.sigla, municipality.nome, slug, isCapital, 0, lat, lon]
+        );
+
+        seeded += 1;
+        if (seeded % 100 === 0) {
+          console.log(`  ${seeded}/${valid.length} seeded...`);
         }
-        return [`${uf}:${m.nome}`, m];
-      })
-    );
-
-    for (const seed of CITY_SEEDS) {
-      const municipality = byNameUf.get(`${seed.uf.toUpperCase()}:${seed.city}`);
-      if (!municipality) {
-        throw new Error(`Municipality not found in IBGE API: ${seed.uf.toUpperCase()} / ${seed.city}`);
+      } catch (error) {
+        failed += 1;
+        console.error(`  failed: ${municipality.nome} (${municipality.id}) — ${error.message}`);
       }
+    });
 
-      const topology = await fetchTopology(municipality.id);
-      const { lon, lat } = bboxCenter(topology);
+    await pool.query(`INSERT INTO seo.schema_migrations (version) VALUES ('V004') ON CONFLICT DO NOTHING`);
 
-      await pool.query(
-        `
-          INSERT INTO seo.city (
-            id, uf, name, slug, capital, populacao, pib_per_capita, renda_media,
-            lat, lon, meso_id, micro_id, rm_id, ibge_updated_at
-          )
-          VALUES (
-            $1, $2, $3, $4, $5, $6, NULL, NULL,
-            $7, $8, NULL, NULL, NULL, NULL
-          )
-          ON CONFLICT (id) DO UPDATE SET
-            uf = EXCLUDED.uf,
-            name = EXCLUDED.name,
-            slug = EXCLUDED.slug,
-            capital = EXCLUDED.capital,
-            populacao = EXCLUDED.populacao,
-            lat = EXCLUDED.lat,
-            lon = EXCLUDED.lon,
-            updated_at = now()
-        `,
-        [
-          municipality.id,
-          seed.uf.toUpperCase(),
-          municipality.nome,
-          seed.slug,
-          seed.isCapital,
-          seed.population,
-          lat,
-          lon,
-        ]
-      );
-
-      console.log(`seeded ${seed.city} (${municipality.id})`);
-    }
-
-    console.log('City seed complete.');
+    console.log(`City seed complete. ${seeded} seeded, ${failed} failed.`);
   } finally {
     await pool.end();
   }

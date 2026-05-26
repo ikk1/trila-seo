@@ -35,9 +35,10 @@ function mapDbRow(row: {
   };
 }
 
-export async function loadCities(): Promise<ResolvedCityEntry[]> {
+async function queryCities(limit?: number): Promise<ResolvedCityEntry[]> {
   if (!process.env.SEO_DB_URL) {
-    return CITIES.map((city) => ({ ...city, source: 'catalog' as const }));
+    const cities = CITIES.map((city) => ({ ...city, source: 'catalog' as const }));
+    return limit ? cities.slice(0, limit) : cities;
   }
 
   try {
@@ -50,22 +51,39 @@ export async function loadCities(): Promise<ResolvedCityEntry[]> {
       capital: boolean;
       populacao: number;
       region: string;
-    }>(`
-      SELECT c.id, c.uf, c.name, c.slug, c.capital, c.populacao, u.region
-      FROM seo.city c
-      JOIN seo.uf u ON u.code = c.uf
-      ORDER BY c.populacao DESC, c.name ASC
-      LIMIT 200
-    `);
+    }>(
+      limit
+        ? `SELECT c.id, c.uf, c.name, c.slug, c.capital, c.populacao, u.region
+           FROM seo.city c
+           JOIN seo.uf u ON u.code = c.uf
+           ORDER BY c.populacao DESC, c.name ASC
+           LIMIT ${limit}`
+        : `SELECT c.id, c.uf, c.name, c.slug, c.capital, c.populacao, u.region
+           FROM seo.city c
+           JOIN seo.uf u ON u.code = c.uf
+           ORDER BY c.populacao DESC, c.name ASC`
+    );
 
     if (!rows.length) {
-      return CITIES.map((city) => ({ ...city, source: 'catalog' as const }));
+      const cities = CITIES.map((city) => ({ ...city, source: 'catalog' as const }));
+      return limit ? cities.slice(0, limit) : cities;
     }
 
     return rows.map(mapDbRow);
   } catch {
-    return CITIES.map((city) => ({ ...city, source: 'catalog' as const }));
+    const cities = CITIES.map((city) => ({ ...city, source: 'catalog' as const }));
+    return limit ? cities.slice(0, limit) : cities;
   }
+}
+
+/** Top 500 cities — used for generateStaticParams (pre-build). */
+export async function loadCities(): Promise<ResolvedCityEntry[]> {
+  return queryCities(500);
+}
+
+/** All cities — used for sitemap generation only. */
+export async function loadAllCities(): Promise<ResolvedCityEntry[]> {
+  return queryCities();
 }
 
 export async function loadCity(uf: string, citySlug: string): Promise<ResolvedCityEntry | null> {

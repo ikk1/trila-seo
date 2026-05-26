@@ -1,10 +1,10 @@
 import type { MetadataRoute } from 'next';
-import { loadCities } from '@/lib/locations';
+import { loadAllCities } from '@/lib/locations';
 import { VERTICALS } from '@/lib/verticals';
 import { DEFAULT_LAST_MODIFIED, SITE_URL } from '@/lib/site';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const cities = await loadCities();
+  const cities = await loadAllCities();
 
   const staticPages: MetadataRoute.Sitemap = [
     {

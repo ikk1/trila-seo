@@ -20,7 +20,7 @@ export function SiteHeader() {
 
   // Fecha dropdown ao clicar fora + ESC fecha ambos
   useEffect(() => {
-    function handleMouseDown(e: MouseEvent) {
+    function handlePointerDown(e: PointerEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setSegmentosOpen(false);
       }
@@ -31,10 +31,10 @@ export function SiteHeader() {
         setMobileOpen(false);
       }
     }
-    document.addEventListener('pointerdown', handleMouseDown);
+    document.addEventListener('pointerdown', handlePointerDown);
     document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('pointerdown', handleMouseDown);
+      document.removeEventListener('pointerdown', handlePointerDown);
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);

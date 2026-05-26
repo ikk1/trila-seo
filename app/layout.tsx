@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
 import { BRAND_NAME, DEFAULT_OG_IMAGE, SITE_URL } from '@/lib/site';
+import { SiteHeader } from '@/components/SiteHeader';
+import { SiteFooter } from '@/components/SiteFooter';
 import './globals.css';
 
 const outfit = Outfit({
@@ -45,7 +47,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${outfit.variable} ${plusJakarta.variable}`}>
-      <body>{children}</body>
+      <body>
+        <SiteHeader />
+        {children}
+        <SiteFooter />
+      </body>
     </html>
   );
 }

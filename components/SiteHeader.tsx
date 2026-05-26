@@ -15,6 +15,7 @@ export function SiteHeader() {
   // Fecha gaveta mobile ao navegar
   useEffect(() => {
     setMobileOpen(false);
+    setSegmentosOpen(false);
   }, [pathname]);
 
   // Fecha dropdown ao clicar fora + ESC fecha ambos
@@ -30,17 +31,16 @@ export function SiteHeader() {
         setMobileOpen(false);
       }
     }
-    document.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener('pointerdown', handleMouseDown);
     document.addEventListener('keydown', handleKeyDown);
     return () => {
-      document.removeEventListener('mousedown', handleMouseDown);
+      document.removeEventListener('pointerdown', handleMouseDown);
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
 
   return (
     <header
-      role="banner"
       className="sticky top-0 z-50 border-b border-black/6 bg-white shadow-[0_1px_3px_0_rgba(0,0,0,0.06)]"
     >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
@@ -72,7 +72,7 @@ export function SiteHeader() {
           <div ref={dropdownRef} className="relative">
             <button
               type="button"
-              aria-haspopup="true"
+              aria-haspopup="listbox"
               aria-expanded={segmentosOpen}
               onClick={() => setSegmentosOpen((v) => !v)}
               className="flex items-center gap-1.5 text-sm font-medium text-text-muted transition-colors hover:text-text-main"
@@ -130,7 +130,7 @@ export function SiteHeader() {
           aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
           aria-expanded={mobileOpen}
           onClick={() => setMobileOpen((v) => !v)}
-          className="flex h-9 w-9 flex-col items-center justify-center gap-[5px] rounded-lg md:hidden"
+          className="flex h-9 w-9 flex-col items-center justify-center gap-[5px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:hidden"
         >
           {mobileOpen ? (
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -154,6 +154,8 @@ export function SiteHeader() {
 
       {/* Mobile drawer */}
       <div
+        aria-hidden={!mobileOpen}
+        inert={!mobileOpen ? true : undefined}
         className={`overflow-hidden transition-all duration-200 md:hidden ${
           mobileOpen ? 'max-h-[600px]' : 'max-h-0'
         }`}

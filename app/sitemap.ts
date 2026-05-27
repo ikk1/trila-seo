@@ -5,6 +5,12 @@ import { DEFAULT_LAST_MODIFIED, SITE_URL } from '@/lib/site';
 
 const CHUNK_SIZE = 5_000;
 
+function cityPriorities(population: number): { hub: number; vertical: number } {
+  if (population >= 500_000) return { hub: 0.8, vertical: 0.75 };
+  if (population >= 100_000) return { hub: 0.75, vertical: 0.7 };
+  return { hub: 0.65, vertical: 0.6 };
+}
+
 export async function generateSitemaps() {
   const cities = await loadAllCities();
   const chunks = Math.ceil((cities.length * VERTICALS.length) / CHUNK_SIZE);
@@ -38,7 +44,7 @@ export default async function sitemap(props: { id: Promise<number> }): Promise<M
       url: `${SITE_URL}/${city.uf}/${city.slug}`,
       lastModified: DEFAULT_LAST_MODIFIED,
       changeFrequency: 'monthly' as const,
-      priority: 0.75,
+      priority: cityPriorities(city.population).hub,
     }));
   }
 
@@ -53,6 +59,6 @@ export default async function sitemap(props: { id: Promise<number> }): Promise<M
     url: `${SITE_URL}/${city.uf}/${city.slug}/${vertical.slug}`,
     lastModified: DEFAULT_LAST_MODIFIED,
     changeFrequency: 'monthly' as const,
-    priority: 0.7,
+    priority: cityPriorities(city.population).vertical,
   }));
 }

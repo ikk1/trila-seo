@@ -23,6 +23,15 @@ const highlights = [
   'Pensado para negócios de beleza que precisam de previsibilidade.',
 ];
 
+const features = [
+  'Agenda online',
+  'Confirmação por WhatsApp',
+  'Controle financeiro',
+  'Comissões e repasses',
+  'Histórico de clientes',
+  'Relatório de recorrência',
+];
+
 const sections = [
   {
     title: 'Agenda sem ruído operacional',
@@ -65,19 +74,13 @@ export default async function HomePage() {
                 href={APP_URL}
                 className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 py-3 font-semibold text-white shadow-[var(--shadow-card-hover)] transition-colors hover:bg-primary-dark"
               >
-                Acessar o sistema
+                Testar a Trila
               </a>
               <Link
                 href="/planos"
                 className="inline-flex min-h-11 items-center justify-center rounded-xl border border-black/10 bg-white px-6 py-3 font-semibold text-text-main transition-colors hover:bg-surface"
               >
-                Ver como a Trila se posiciona
-              </Link>
-              <Link
-                href="/cidades"
-                className="inline-flex min-h-11 items-center justify-center rounded-xl border border-black/10 bg-white px-6 py-3 font-semibold text-text-main transition-colors hover:bg-surface"
-              >
-                Ver cidades priorizadas
+                Ver planos
               </Link>
             </div>
             <ul className="mt-8 grid gap-3 text-sm text-text-muted sm:grid-cols-3">
@@ -90,6 +93,16 @@ export default async function HomePage() {
                 </li>
               ))}
             </ul>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {features.map((feat) => (
+                <span
+                  key={feat}
+                  className="rounded-full border border-black/8 bg-white px-3 py-1 text-xs font-medium text-text-muted"
+                >
+                  {feat}
+                </span>
+              ))}
+            </div>
           </div>
 
           <div className="flex-1">
@@ -121,8 +134,8 @@ export default async function HomePage() {
         <div className="max-w-3xl">
           <h2>Segmentos que a Trila atende</h2>
           <p className="mt-4 text-lg leading-8 text-text-muted">
-            As primeiras páginas de SEO foram organizadas por vertical para capturar
-            demanda mais específica sem misturar a mensagem de cada operação.
+            De salão de beleza a espaço de estética, a Trila adapta agenda,
+            financeiro e rotina ao ritmo de cada operação.
           </p>
         </div>
         <div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">

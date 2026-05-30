@@ -44,7 +44,7 @@ export function buildOrganizationJsonLd() {
   };
 }
 
-export function buildSoftwareJsonLd() {
+export function buildSoftwareJsonLd(lowestPlanPrice = 49.9) {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -59,6 +59,16 @@ export function buildSoftwareJsonLd() {
       '@type': 'Audience',
       audienceType:
         'Salões de beleza, barbearias, clínicas de estética, spas e operações de beleza.',
+    },
+    // Preço real do plano de entrada, lido do banco. aggregateRating é deliberadamente
+    // omitido até existirem avaliações reais coletadas — rating fabricado viola
+    // as diretrizes de rich results do Google.
+    offers: {
+      '@type': 'Offer',
+      price: lowestPlanPrice.toFixed(2),
+      priceCurrency: 'BRL',
+      url: absoluteUrl('/planos'),
+      availability: 'https://schema.org/InStock',
     },
   };
 }

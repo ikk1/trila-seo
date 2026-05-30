@@ -1,52 +1,42 @@
 import Link from 'next/link';
 import { JsonLd } from '@/components/JsonLd';
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildMetadata } from '@/lib/seo';
+import { loadPlans, formatBRL, getLowestPlanPrice, TRIAL_LABEL, TRIAL_DAYS, PLAN_CTA } from '@/lib/plans';
 import { APP_URL } from '@/lib/site';
 
+// Revalida de hora em hora: mudanças de preço/recursos feitas no admin refletem no
+// site sem precisar de novo deploy. A página continua sendo servida estaticamente.
+export const revalidate = 3600;
+
 export const metadata = buildMetadata({
-  title: 'Planos e posicionamento da Trila',
+  title: 'Planos e preços da Trila',
   description:
-    'Entenda como a Trila se encaixa em operações de beleza e estética com diferentes níveis de complexidade.',
+    'Planos da Trila a partir de R$ 49,90/mês. Comece com 14 dias grátis, sem cartão de crédito, e organize agenda, financeiro e WhatsApp do seu negócio de beleza.',
   path: '/planos',
 });
 
-const pillars = [
-  {
-    title: 'Operação enxuta',
-    audience: 'Para negócios que querem sair do WhatsApp mais planilha.',
-    body: 'Centralização de agenda, clientes e rotina principal sem empilhar ferramenta desconexa.',
-  },
-  {
-    title: 'Equipe em crescimento',
-    audience: 'Para casas com mais profissionais e necessidade de coordenação.',
-    body: 'Mais previsibilidade para recepção, comissões, produtividade e fechamento.',
-  },
-  {
-    title: 'Operação multi-serviço',
-    audience: 'Para clínicas, centros e operações mais exigentes.',
-    body: 'Visão consolidada de fluxo, recorrência, financeiro e atendimento.',
-  },
-];
-
 const faqs = [
   {
-    question: 'A Trila publica tabela de preço nesta etapa?',
+    question: 'Preciso de cartão de crédito para testar?',
     answer:
-      'Não. Nesta fase a página organiza posicionamento e aderência de uso; detalhamento comercial pode acontecer no fluxo de contato ou demonstração.',
+      'Não. O teste de 14 dias é totalmente gratuito e não exige cartão. Você só escolhe a forma de pagamento se decidir continuar ao final do período.',
+  },
+  {
+    question: 'Posso cancelar quando quiser?',
+    answer:
+      'Sim. A assinatura é mensal e sem fidelidade — você pode cancelar a qualquer momento direto no sistema.',
   },
   {
     question: 'A Trila atende negócios pequenos e grandes?',
     answer:
-      'Sim. A proposta é servir desde operações enxutas até estruturas com vários profissionais e mais de uma frente de serviço.',
-  },
-  {
-    question: 'A contratação depende de implantação complexa?',
-    answer:
-      'A implantação pode ser guiada conforme o tamanho da operação, mas a mensagem central é reduzir atrito operacional rapidamente.',
+      'Sim. O plano Starter atende operações enxutas com até 2 profissionais, e o Pro acompanha casas em crescimento com até 8 profissionais, clientes ilimitados e recursos de IA.',
   },
 ];
 
-export default function PlansPage() {
+export default async function PlansPage() {
+  const plans = await loadPlans();
+  const lowest = getLowestPlanPrice(plans);
+
   return (
     <main className="mx-auto max-w-6xl px-6 py-20">
       <JsonLd data={buildFaqJsonLd(faqs)} />
@@ -59,34 +49,66 @@ export default function PlansPage() {
 
       <div className="max-w-3xl">
         <span className="inline-flex rounded-full border border-primary/15 bg-primary/6 px-4 py-2 text-sm font-semibold text-primary">
-          Planos e enquadramento comercial
+          Planos e preços
         </span>
         <h1 className="mt-6 text-balance text-4xl text-text-main sm:text-5xl">
-          A Trila se adapta ao tamanho da operação, não ao contrário.
+          Preço simples, sem surpresa. A partir de {formatBRL(lowest)}/mês.
         </h1>
         <p className="mt-6 text-lg leading-8 text-text-muted">
-          Esta página organiza a leitura comercial do produto por maturidade operacional.
-          O objetivo aqui é deixar claro para que tipo de negócio a Trila faz sentido.
+          {TRIAL_DAYS} dias grátis em qualquer plano, sem cartão de crédito. Assinatura
+          mensal, sem fidelidade — cancele quando quiser.
         </p>
       </div>
 
-      <section className="mt-12 grid gap-6 lg:grid-cols-3">
-        {pillars.map((pillar) => (
+      <section className="mt-12 grid gap-6 lg:grid-cols-2">
+        {plans.map((plan) => (
           <article
-            key={pillar.title}
-            className="rounded-[24px] border border-black/6 bg-white p-6 shadow-[var(--shadow-card)]"
+            key={plan.name}
+            className={`relative flex flex-col rounded-[24px] border bg-white p-8 shadow-[var(--shadow-card)] ${
+              plan.highlighted ? 'border-primary ring-1 ring-primary/30' : 'border-black/6'
+            }`}
           >
-            <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">
-              {pillar.audience}
-            </p>
-            <h2 className="mt-4 text-2xl">{pillar.title}</h2>
-            <p className="mt-4 leading-7 text-text-muted">{pillar.body}</p>
+            {plan.badge && (
+              <span className="absolute -top-3 right-6 inline-flex rounded-full bg-primary px-3 py-1 text-xs font-semibold text-white shadow-sm">
+                {plan.badge}
+              </span>
+            )}
+            <h2 className="text-2xl text-text-main">{plan.name}</h2>
+            {plan.tagline && (
+              <p className="mt-2 min-h-12 leading-6 text-text-muted">{plan.tagline}</p>
+            )}
+
+            <div className="mt-6 flex items-baseline gap-1">
+              <span className="text-4xl font-semibold text-text-main">{plan.priceLabel}</span>
+              <span className="text-text-muted">/mês</span>
+            </div>
+
+            <a
+              href={APP_URL}
+              className={`mt-6 inline-flex min-h-11 items-center justify-center rounded-xl px-6 py-3 font-semibold transition-colors ${
+                plan.highlighted
+                  ? 'bg-primary text-white hover:bg-primary-dark'
+                  : 'border border-black/10 bg-white text-text-main hover:bg-surface'
+              }`}
+            >
+              {PLAN_CTA}
+            </a>
+            <p className="mt-2 text-center text-xs text-text-muted">{TRIAL_LABEL}</p>
+
+            <ul className="mt-8 grid gap-3 text-sm leading-6 text-text-main">
+              {plan.features.map((feat) => (
+                <li key={feat} className="flex gap-2">
+                  <span aria-hidden className="mt-0.5 text-primary">✓</span>
+                  <span>{feat}</span>
+                </li>
+              ))}
+            </ul>
           </article>
         ))}
       </section>
 
       <section className="mt-16 rounded-[28px] border border-black/6 bg-surface p-8">
-        <h2>Perguntas frequentes sobre contratação</h2>
+        <h2>Perguntas frequentes</h2>
         <div className="mt-8 grid gap-5">
           {faqs.map((faq) => (
             <article key={faq.question} className="rounded-2xl border border-black/6 bg-white p-5">
@@ -102,7 +124,7 @@ export default function PlansPage() {
           href={APP_URL}
           className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 py-3 font-semibold text-white hover:bg-primary-dark"
         >
-          Acessar o sistema
+          {PLAN_CTA}
         </a>
         <Link
           href="/"

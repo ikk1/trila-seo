@@ -8,6 +8,7 @@ import {
 } from '@/lib/seo';
 import { loadCities } from '@/lib/locations';
 import { APP_URL } from '@/lib/site';
+import { TRIAL_LABEL, loadPlans, getLowestPlanPrice } from '@/lib/plans';
 import { VERTICALS } from '@/lib/verticals';
 
 export const metadata = buildMetadata({
@@ -48,12 +49,13 @@ const sections = [
 ];
 
 export default async function HomePage() {
-  const cities = await loadCities();
+  const [cities, plans] = await Promise.all([loadCities(), loadPlans()]);
+  const lowestPlanPrice = getLowestPlanPrice(plans);
 
   return (
     <main className="bg-background">
       <JsonLd data={buildOrganizationJsonLd()} />
-      <JsonLd data={buildSoftwareJsonLd()} />
+      <JsonLd data={buildSoftwareJsonLd(lowestPlanPrice)} />
       <JsonLd data={buildBreadcrumbJsonLd([{ name: 'Home', path: '/' }])} />
 
       <section className="relative overflow-hidden border-b border-black/5 bg-[radial-gradient(circle_at_top_left,_rgba(158,90,82,0.14),_transparent_35%),linear-gradient(180deg,_#fff_0%,_#f9f7f7_100%)]">
@@ -74,15 +76,18 @@ export default async function HomePage() {
                 href={APP_URL}
                 className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 py-3 font-semibold text-white shadow-[var(--shadow-card-hover)] transition-colors hover:bg-primary-dark"
               >
-                Testar a Trila
+                Começar grátis
               </a>
               <Link
                 href="/planos"
                 className="inline-flex min-h-11 items-center justify-center rounded-xl border border-black/10 bg-white px-6 py-3 font-semibold text-text-main transition-colors hover:bg-surface"
               >
-                Ver planos
+                Ver planos e preços
               </Link>
             </div>
+            <p className="mt-4 text-sm font-medium text-text-muted">
+              {TRIAL_LABEL} · cancele quando quiser
+            </p>
             <ul className="mt-8 grid gap-3 text-sm text-text-muted sm:grid-cols-3">
               {highlights.map((item) => (
                 <li
@@ -131,6 +136,41 @@ export default async function HomePage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-20">
+        <div className="grid items-center gap-10 rounded-[28px] border border-black/6 bg-text-main p-8 text-white shadow-[var(--shadow-modal)] lg:grid-cols-2 lg:p-12">
+          <div>
+            <span className="inline-flex rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white">
+              Diferencial: IA aplicada
+            </span>
+            <h2 className="mt-6 text-3xl text-white sm:text-4xl">
+              Uma IA que te diz o que fazer hoje.
+            </h2>
+            <p className="mt-4 text-lg leading-8 text-white/75">
+              Todo dia a Trila lê os dados do seu salão e sugere uma ação concreta para
+              reter clientes e encher a agenda. É o tipo de ajuda que nenhuma planilha dá.
+            </p>
+            <Link
+              href="/inteligencia-artificial"
+              className="mt-8 inline-flex min-h-11 items-center justify-center rounded-xl bg-white px-6 py-3 font-semibold text-text-main transition-colors hover:bg-surface"
+            >
+              Conhecer a IA da Trila →
+            </Link>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/6 p-6">
+            <div className="flex items-center gap-2">
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-primary text-sm">✨</span>
+              <p className="text-sm font-semibold uppercase tracking-[0.16em] text-white/70">
+                Insight do dia
+              </p>
+            </div>
+            <p className="mt-4 text-lg leading-7">
+              “Você tem 12 clientes que não voltam há 45 dias. Considere criar uma campanha
+              de reengajamento.”
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 pb-20">
         <div className="max-w-3xl">
           <h2>Segmentos que a Trila atende</h2>
           <p className="mt-4 text-lg leading-8 text-text-muted">

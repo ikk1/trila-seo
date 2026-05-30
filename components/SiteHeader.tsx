@@ -56,6 +56,12 @@ export function SiteHeader() {
         {/* Desktop nav */}
         <nav aria-label="Navegação principal" className="hidden items-center gap-7 md:flex">
           <Link
+            href="/inteligencia-artificial"
+            className="text-sm font-medium text-text-muted transition-colors hover:text-text-main"
+          >
+            Inteligência
+          </Link>
+          <Link
             href="/planos"
             className="text-sm font-medium text-text-muted transition-colors hover:text-text-main"
           >
@@ -164,6 +170,12 @@ export function SiteHeader() {
           aria-label="Menu mobile"
           className="border-t border-black/6 bg-white px-6 pb-5 pt-2"
         >
+          <Link
+            href="/inteligencia-artificial"
+            className="block border-b border-black/6 py-3 text-sm font-medium text-text-main"
+          >
+            Inteligência
+          </Link>
           <Link
             href="/planos"
             className="block border-b border-black/6 py-3 text-sm font-medium text-text-main"

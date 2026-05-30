@@ -63,6 +63,14 @@ export function SiteFooter() {
             <ul className="space-y-2">
               <li>
                 <Link
+                  href="/inteligencia-artificial"
+                  className="text-sm text-white/65 transition-colors hover:text-white"
+                >
+                  Inteligência Artificial
+                </Link>
+              </li>
+              <li>
+                <Link
                   href="/planos"
                   className="text-sm text-white/65 transition-colors hover:text-white"
                 >

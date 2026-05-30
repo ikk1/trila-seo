@@ -34,6 +34,21 @@ function toNumber(value: unknown): number {
   return Number.isFinite(n) ? n : 0;
 }
 
+// subscription_plans.features is a TEXT column holding a JSON-encoded array of strings
+// (the JPA entity maps it as String). The pg driver returns it as a raw string, so we must
+// parse it. Tolerates a native array too, in case the column is ever migrated back to JSONB.
+function parseFeatures(value: unknown): string[] {
+  let arr: unknown = value;
+  if (typeof value === 'string') {
+    try {
+      arr = JSON.parse(value);
+    } catch {
+      return [];
+    }
+  }
+  return Array.isArray(arr) ? arr.filter((f): f is string => typeof f === 'string') : [];
+}
+
 // Taglines são copy de marketing (não existem no banco) — mapeadas por nome do plano.
 const TAGLINES: Record<string, string> = {
   Starter: 'Para quem está organizando a operação e saindo do WhatsApp + planilha.',
@@ -120,9 +135,7 @@ export async function loadPlans(): Promise<Plan[]> {
 
     return rows.map((row) => {
       const price = toNumber(row.price);
-      const features = Array.isArray(row.features)
-        ? (row.features as unknown[]).filter((f): f is string => typeof f === 'string')
-        : [];
+      const features = parseFeatures(row.features);
       return {
         name: row.name,
         price,

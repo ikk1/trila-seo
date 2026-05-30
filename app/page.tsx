@@ -11,6 +11,10 @@ import { APP_URL } from '@/lib/site';
 import { TRIAL_LABEL, loadPlans, getLowestPlanPrice } from '@/lib/plans';
 import { VERTICALS } from '@/lib/verticals';
 
+// Revalida de hora em hora, igual a /planos: o preço lido do banco (usado no schema.org
+// offers) acompanha mudanças feitas no admin sem precisar de redeploy.
+export const revalidate = 3600;
+
 export const metadata = buildMetadata({
   title: 'Sistema de gestão para salões, barbearias e clínicas',
   description:

@@ -16,6 +16,10 @@ function parseArgs() {
   return { file, snapshot };
 }
 
+// Insere em lotes (um INSERT multi-VALUES por lote) — evita milhares de
+// round-trips sequenciais pela proxy pública, que travam/demoram horas.
+const BATCH = 500;
+
 async function main() {
   const url = process.env.SEO_DB_URL;
   if (!url) throw new Error('SEO_DB_URL env var required');
@@ -26,44 +30,67 @@ async function main() {
   if (!Array.isArray(records)) throw new Error('JSON esperado: array de linhas do BigQuery');
   console.log(`${records.length} linhas no arquivo ${file}.`);
 
-  const pool = new Pool({ connectionString: url, max: 8 });
+  // statement_timeout: uma query travada falha em 60s em vez de pendurar para sempre.
+  const pool = new Pool({
+    connectionString: url,
+    max: 4,
+    statement_timeout: 60_000,
+    connectionTimeoutMillis: 30_000,
+  });
 
   try {
     const cityRows = await pool.query('SELECT id FROM seo.city');
     const cityIds = new Set(cityRows.rows.map((r) => Number(r.id)));
     console.log(`${cityIds.size} cidades conhecidas em seo.city.`);
 
-    let upserted = 0;
+    // Filtra/normaliza antes de inserir.
+    const rows = [];
     let skipped = 0;
-
     for (const rec of records) {
       const cityId = Number(rec.id_municipio);
-      const cnae = String(rec.cnae);
       const totalAtivos = Number(rec.total_ativos);
-      const abertos12m = Number(rec.abertos_12m ?? 0);
-      const fechados12m = Number(rec.fechados_12m ?? 0);
-
       if (!cityIds.has(cityId) || !Number.isFinite(totalAtivos) || totalAtivos <= 0) {
         skipped += 1;
         continue;
       }
+      rows.push([
+        cityId,
+        String(rec.cnae),
+        snapshot,
+        totalAtivos,
+        Number(rec.abertos_12m ?? 0),
+        Number(rec.fechados_12m ?? 0),
+      ]);
+    }
+    console.log(`${rows.length} linhas para inserir, ${skipped} skipped (cidade desconhecida ou total<=0).`);
+
+    let upserted = 0;
+    for (let i = 0; i < rows.length; i += BATCH) {
+      const batch = rows.slice(i, i + BATCH);
+      const values = [];
+      const params = [];
+      batch.forEach((r, j) => {
+        const o = j * 6;
+        values.push(`($${o + 1},$${o + 2},$${o + 3},$${o + 4},$${o + 5},$${o + 6})`);
+        params.push(...r);
+      });
 
       await pool.query(
         `INSERT INTO seo.cnae_establishments
            (city_id, cnae, snapshot_date, total_ativos, abertos_12m, fechados_12m)
-         VALUES ($1, $2, $3, $4, $5, $6)
+         VALUES ${values.join(',')}
          ON CONFLICT (city_id, cnae, snapshot_date) DO UPDATE SET
            total_ativos = EXCLUDED.total_ativos,
            abertos_12m  = EXCLUDED.abertos_12m,
            fechados_12m = EXCLUDED.fechados_12m`,
-        [cityId, cnae, snapshot, totalAtivos, abertos12m, fechados12m],
+        params,
       );
 
-      upserted += 1;
-      if (upserted % 1000 === 0) console.log(`  ${upserted} upserted...`);
+      upserted += batch.length;
+      console.log(`  ${upserted}/${rows.length} upserted...`);
     }
 
-    console.log(`Ingestão completa. ${upserted} upserted, ${skipped} skipped (cidade desconhecida ou total<=0).`);
+    console.log(`Ingestão completa. ${upserted} upserted, ${skipped} skipped.`);
   } finally {
     await pool.end();
   }

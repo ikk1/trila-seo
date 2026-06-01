@@ -86,7 +86,36 @@ export async function loadAllCities(): Promise<ResolvedCityEntry[]> {
   return queryCities();
 }
 
+function catalogCity(uf: string, citySlug: string): ResolvedCityEntry | null {
+  const found = CITIES.find((c) => c.uf === uf && c.slug === citySlug);
+  return found ? { ...found, source: 'catalog' } : null;
+}
+
+/** Carrega UMA cidade por (uf, slug) direto do DB — sem o teto de 500. */
 export async function loadCity(uf: string, citySlug: string): Promise<ResolvedCityEntry | null> {
-  const cities = await loadCities();
-  return cities.find((entry) => entry.uf === uf && entry.slug === citySlug) ?? null;
+  if (!process.env.SEO_DB_URL) {
+    return catalogCity(uf, citySlug);
+  }
+
+  try {
+    const pool = getDbPool();
+    const { rows } = await pool.query<{
+      id: number; uf: string; name: string; slug: string;
+      capital: boolean; populacao: number; region: string;
+    }>(
+      `SELECT c.id, c.uf, c.name, c.slug, c.capital, c.populacao, u.region
+         FROM seo.city c
+         JOIN seo.uf u ON u.code = c.uf
+        WHERE lower(c.uf) = lower($1) AND c.slug = $2
+        LIMIT 1`,
+      [uf, citySlug]
+    );
+
+    if (!rows.length) {
+      return catalogCity(uf, citySlug);
+    }
+    return mapDbRow(rows[0]);
+  } catch {
+    return catalogCity(uf, citySlug);
+  }
 }

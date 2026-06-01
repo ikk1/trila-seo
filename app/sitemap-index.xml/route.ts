@@ -1,10 +1,9 @@
 // app/sitemap-index.xml/route.ts
-// Índice de sitemap: agrega todos os chunks /sitemap/[id].xml num
-// <sitemapindex>, para o Google descobrir as páginas programáticas.
+// Índice de sitemap gerado em runtime (ISR 1 dia) — agrega os chunks /sitemap/[id].
 import { getSitemapIds } from '@/lib/sitemap';
 import { SITE_URL, DEFAULT_LAST_MODIFIED } from '@/lib/site';
 
-export const dynamic = 'force-static';
+export const revalidate = 86400;
 
 export async function GET() {
   const ids = await getSitemapIds();
@@ -14,7 +13,7 @@ export async function GET() {
     .map(
       (id) =>
         `  <sitemap>\n` +
-        `    <loc>${SITE_URL}/sitemap/${id}.xml</loc>\n` +
+        `    <loc>${SITE_URL}/sitemap/${id}</loc>\n` +
         `    <lastmod>${lastmod}</lastmod>\n` +
         `  </sitemap>`
     )
@@ -29,7 +28,7 @@ export async function GET() {
   return new Response(xml, {
     headers: {
       'Content-Type': 'application/xml',
-      'Cache-Control': 's-maxage=3600, stale-while-revalidate',
+      'Cache-Control': 's-maxage=86400, stale-while-revalidate',
     },
   });
 }

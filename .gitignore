@@ -42,3 +42,6 @@ next-env.d.ts
 
 # logs
 *.log
+
+# Dump bruto do BigQuery (dados RFB) — não versionar
+scripts/data/

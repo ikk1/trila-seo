@@ -1,5 +1,6 @@
 export interface VerticalContent {
   slug: string;
+  cnaes: string[];
   singular: string;
   pluralEstablishments: string;
   pluralProfessionals: string;
@@ -14,6 +15,7 @@ export interface VerticalContent {
 export const VERTICALS: VerticalContent[] = [
   {
     slug: 'salao-de-beleza',
+    cnaes: ['9602501'],
     singular: 'salão de beleza',
     pluralEstablishments: 'salões de beleza',
     pluralProfessionals: 'profissionais de beleza',
@@ -47,6 +49,7 @@ export const VERTICALS: VerticalContent[] = [
   },
   {
     slug: 'barbearia',
+    cnaes: ['9602503'],
     singular: 'barbearia',
     pluralEstablishments: 'barbearias',
     pluralProfessionals: 'barbeiros',
@@ -80,6 +83,7 @@ export const VERTICALS: VerticalContent[] = [
   },
   {
     slug: 'clinica-de-estetica',
+    cnaes: ['8690901', '8690999'],
     singular: 'clínica de estética',
     pluralEstablishments: 'clínicas de estética',
     pluralProfessionals: 'esteticistas',
@@ -113,6 +117,7 @@ export const VERTICALS: VerticalContent[] = [
   },
   {
     slug: 'spa',
+    cnaes: ['9609299'],
     singular: 'spa',
     pluralEstablishments: 'spas',
     pluralProfessionals: 'terapeutas',
@@ -146,6 +151,7 @@ export const VERTICALS: VerticalContent[] = [
   },
   {
     slug: 'manicure',
+    cnaes: ['9602502'],
     singular: 'espaço de manicure',
     pluralEstablishments: 'espaços de manicure',
     pluralProfessionals: 'manicures e pedicures',
@@ -179,6 +185,7 @@ export const VERTICALS: VerticalContent[] = [
   },
   {
     slug: 'nail-designer',
+    cnaes: ['9602502'],
     singular: 'nail studio',
     pluralEstablishments: 'nail studios',
     pluralProfessionals: 'nail designers',
@@ -212,6 +219,7 @@ export const VERTICALS: VerticalContent[] = [
   },
   {
     slug: 'centro-de-beleza',
+    cnaes: ['9602501', '9602503'],
     singular: 'centro de beleza',
     pluralEstablishments: 'centros de beleza',
     pluralProfessionals: 'profissionais de beleza',
@@ -245,6 +253,7 @@ export const VERTICALS: VerticalContent[] = [
   },
   {
     slug: 'esteticista',
+    cnaes: ['8690901'],
     singular: 'espaço de estética',
     pluralEstablishments: 'espaços de estética',
     pluralProfessionals: 'esteticistas autônomos',

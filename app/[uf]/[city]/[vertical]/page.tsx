@@ -9,6 +9,7 @@ import {
 } from '@/lib/seo';
 import { loadCities } from '@/lib/locations';
 import { loadCityVerticalInsights } from '@/lib/city-insights';
+import { loadCityVerticalMarket } from '@/lib/city-market';
 import { VERTICALS } from '@/lib/verticals';
 import { resolveCityVertical, buildCityVerticalDescription, buildCityVerticalTitle, shouldIndexCityVertical } from '@/lib/city-pages';
 import { APP_URL } from '@/lib/site';
@@ -31,6 +32,8 @@ const percent = new Intl.NumberFormat('pt-BR', {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
 });
+
+const count = new Intl.NumberFormat('pt-BR');
 
 export async function generateStaticParams() {
   const cities = await loadCities();
@@ -55,7 +58,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     typeof resolved.city.id === 'number'
       ? await loadCityVerticalInsights(resolved.city.id, resolved.vertical.slug)
       : null;
-  const indexable = shouldIndexCityVertical(resolved.city, insights !== null);
+  const market =
+    typeof resolved.city.id === 'number'
+      ? await loadCityVerticalMarket(resolved.city.id, resolved.vertical.cnaes)
+      : null;
+  const indexable = shouldIndexCityVertical(resolved.city, insights !== null, market?.totalAtivos ?? 0);
 
   return {
     ...buildMetadata({
@@ -79,6 +86,10 @@ export default async function CityVerticalPage({ params }: PageProps) {
   const insights =
     typeof cityEntry.id === 'number'
       ? await loadCityVerticalInsights(cityEntry.id, verticalEntry.slug)
+      : null;
+  const market =
+    typeof cityEntry.id === 'number'
+      ? await loadCityVerticalMarket(cityEntry.id, verticalEntry.cnaes)
       : null;
   const faqs = [
     {
@@ -263,6 +274,29 @@ export default async function CityVerticalPage({ params }: PageProps) {
               </div>
             </article>
           )}
+        </section>
+      )}
+
+      {market && (
+        <section className="mt-16 rounded-[28px] border border-black/6 bg-surface p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-primary">
+            Mercado local
+          </p>
+          <h2 className="mt-3 text-3xl text-text-main">
+            {verticalEntry.singular} em {cityEntry.city}
+          </h2>
+          <p className="mt-4 text-lg leading-8 text-text-muted">
+            Há cerca de{' '}
+            <strong className="text-text-main">{count.format(market.totalAtivos)}</strong>{' '}
+            {verticalEntry.pluralEstablishments} ativos em {cityEntry.city}.
+            {(market.abertos12m > 0 || market.fechados12m > 0) && (
+              <>
+                {' '}Nos últimos 12 meses,{' '}
+                <strong className="text-text-main">{count.format(market.abertos12m)}</strong> abriram e{' '}
+                <strong className="text-text-main">{count.format(market.fechados12m)}</strong> encerraram.
+              </>
+            )}
+          </p>
         </section>
       )}
 

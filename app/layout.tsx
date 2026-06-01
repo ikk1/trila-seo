@@ -3,6 +3,7 @@ import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
 import { BRAND_NAME, DEFAULT_OG_IMAGE, SITE_URL } from '@/lib/site';
 import { SiteHeader } from '@/components/SiteHeader';
 import { SiteFooter } from '@/components/SiteFooter';
+import { Analytics } from '@/components/Analytics';
 import './globals.css';
 
 const outfit = Outfit({
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR" className={`${outfit.variable} ${plusJakarta.variable}`}>
       <body>
+        <Analytics />
         <SiteHeader />
         {children}
         <SiteFooter />

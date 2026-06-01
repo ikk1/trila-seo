@@ -1,9 +1,12 @@
 // app/sitemap-index.xml/route.ts
-// Índice de sitemap gerado em runtime (ISR 1 dia) — agrega os chunks /sitemap/[id].
+// Índice de sitemap gerado em runtime — agrega os chunks /sitemap/[id].
+// force-dynamic em vez de revalidate: rotas ISR sem segmento dinâmico são
+// pré-renderizadas no build (onde o DB interno não é alcançável), o que
+// congelaria o índice no catálogo de 100 cidades. Em runtime o DB tem as ~5.570.
 import { getSitemapIds } from '@/lib/sitemap';
 import { SITE_URL, DEFAULT_LAST_MODIFIED } from '@/lib/site';
 
-export const revalidate = 86400;
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const ids = await getSitemapIds();

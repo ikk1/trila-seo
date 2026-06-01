@@ -33,13 +33,22 @@ export async function resolveCityVertical(uf: string, citySlug: string, vertical
 /** Limiar de população para indexar a página cidade×vertical sem dados diferenciados. */
 export const CITY_INDEX_POPULATION_THRESHOLD = 100_000;
 
+/** Limiar de estabelecimentos ativos para indexar a página cidade×vertical via dados de mercado. */
+export const CITY_MARKET_INDEX_THRESHOLD = 5;
+
 /**
  * Decide se uma página cidade×vertical deve ser indexável.
  * Indexa quando há dados diferenciados (insights) OU a cidade é prioritária
- * (capital ou população >= limiar). Caso contrário, noindex até ganhar conteúdo.
+ * (capital ou população >= limiar) OU há mercado local real (>= limiar de estabelecimentos).
+ * Caso contrário, noindex até ganhar conteúdo.
  */
-export function shouldIndexCityVertical(city: ResolvedCityEntry, hasInsights: boolean): boolean {
+export function shouldIndexCityVertical(
+  city: ResolvedCityEntry,
+  hasInsights: boolean,
+  marketCount: number,
+): boolean {
   if (hasInsights) return true;
   if (city.isCapital) return true;
-  return city.population >= CITY_INDEX_POPULATION_THRESHOLD;
+  if (city.population >= CITY_INDEX_POPULATION_THRESHOLD) return true;
+  return marketCount >= CITY_MARKET_INDEX_THRESHOLD;
 }

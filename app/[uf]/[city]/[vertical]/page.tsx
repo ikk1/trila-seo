@@ -58,7 +58,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     typeof resolved.city.id === 'number'
       ? await loadCityVerticalInsights(resolved.city.id, resolved.vertical.slug)
       : null;
-  const indexable = shouldIndexCityVertical(resolved.city, insights !== null);
+  const market =
+    typeof resolved.city.id === 'number'
+      ? await loadCityVerticalMarket(resolved.city.id, resolved.vertical.cnaes)
+      : null;
+  const indexable = shouldIndexCityVertical(resolved.city, insights !== null, market?.totalAtivos ?? 0);
 
   return {
     ...buildMetadata({

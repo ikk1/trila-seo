@@ -49,7 +49,7 @@ export const VERTICALS: VerticalContent[] = [
   },
   {
     slug: 'barbearia',
-    cnaes: ['9602503'],
+    cnaes: ['9602501'],
     singular: 'barbearia',
     pluralEstablishments: 'barbearias',
     pluralProfessionals: 'barbeiros',
@@ -219,7 +219,7 @@ export const VERTICALS: VerticalContent[] = [
   },
   {
     slug: 'centro-de-beleza',
-    cnaes: ['9602501', '9602503'],
+    cnaes: ['9602501'],
     singular: 'centro de beleza',
     pluralEstablishments: 'centros de beleza',
     pluralProfessionals: 'profissionais de beleza',

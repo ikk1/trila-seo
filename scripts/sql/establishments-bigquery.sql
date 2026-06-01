@@ -25,8 +25,10 @@ SELECT
   ) AS fechados_12m
 FROM `basedosdados.br_me_cnpj.estabelecimentos`
 WHERE data = (SELECT MAX(data) FROM `basedosdados.br_me_cnpj.estabelecimentos`)
+  -- 9602503 (barbearia) NÃO existe na CNAE 9602-5 (só /01 e /02); barbearias
+  -- registram sob 9602501. Por isso barbearia/centro-de-beleza usam 9602501.
   AND cnae_fiscal_principal IN (
-    '9602501', '9602502', '9602503', '8690901', '8690999', '9609299'
+    '9602501', '9602502', '8690901', '8690999', '9609299'
   )
 GROUP BY id_municipio, cnae
 HAVING total_ativos > 0;

@@ -11,6 +11,22 @@ function formatPopulation(population?: number) {
   return `cerca de ${new Intl.NumberFormat('pt-BR').format(population)} habitantes`;
 }
 
+function sizeTier(pop: number): string {
+  if (pop >= 1_000_000) return 'grande centro urbano';
+  if (pop >= 300_000) return 'cidade de médio-grande porte';
+  if (pop >= 100_000) return 'cidade de médio porte';
+  if (pop >= 30_000) return 'município de porte regional';
+  return 'mercado local em estruturação';
+}
+
+function buildMarketNote(name: string, region: string, capital: boolean, pop: number): string {
+  const tier = sizeTier(pop);
+  if (capital) {
+    return `Capital da região ${region} e ${tier}, com demanda urbana intensa e boa aderência a uma operação mais estruturada.`;
+  }
+  return `${name} é ${tier} na região ${region}, onde organizar agenda, financeiro e recorrência tende a destravar crescimento.`;
+}
+
 function mapDbRow(row: {
   id: number;
   uf: string;
@@ -29,9 +45,7 @@ function mapDbRow(row: {
     population: row.populacao,
     populationLabel: formatPopulation(row.populacao),
     isCapital: row.capital,
-    marketNote: row.capital
-      ? 'Capital com maior densidade de negócios e necessidade de operação previsível.'
-      : 'Mercado regional relevante para ganho de escala com gestão mais organizada.',
+    marketNote: buildMarketNote(row.name, row.region, row.capital, row.populacao),
     source: 'seo.city',
   };
 }

@@ -4,6 +4,7 @@ import { BRAND_NAME, DEFAULT_OG_IMAGE, SITE_URL } from '@/lib/site';
 import { SiteHeader } from '@/components/SiteHeader';
 import { SiteFooter } from '@/components/SiteFooter';
 import { Analytics } from '@/components/Analytics';
+import { ConsentBanner } from '@/components/ConsentBanner';
 import './globals.css';
 
 const outfit = Outfit({
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SiteHeader />
         {children}
         <SiteFooter />
+        <ConsentBanner />
       </body>
     </html>
   );

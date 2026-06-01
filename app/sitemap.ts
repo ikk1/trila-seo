@@ -2,8 +2,7 @@ import type { MetadataRoute } from 'next';
 import { loadAllCities } from '@/lib/locations';
 import { VERTICALS } from '@/lib/verticals';
 import { DEFAULT_LAST_MODIFIED, SITE_URL } from '@/lib/site';
-
-const CHUNK_SIZE = 5_000;
+import { CHUNK_SIZE, getSitemapIds } from '@/lib/sitemap';
 
 function cityPriorities(population: number): { hub: number; vertical: number } {
   if (population >= 500_000) return { hub: 0.8, vertical: 0.75 };
@@ -12,13 +11,8 @@ function cityPriorities(population: number): { hub: number; vertical: number } {
 }
 
 export async function generateSitemaps() {
-  const cities = await loadAllCities();
-  const chunks = Math.ceil((cities.length * VERTICALS.length) / CHUNK_SIZE);
-  return [
-    { id: 0 }, // static + verticais
-    { id: 1 }, // páginas de cidade
-    ...Array.from({ length: chunks }, (_, i) => ({ id: i + 2 })),
-  ];
+  const ids = await getSitemapIds();
+  return ids.map((id) => ({ id }));
 }
 
 export default async function sitemap(props: { id: Promise<number> }): Promise<MetadataRoute.Sitemap> {

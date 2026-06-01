@@ -34,3 +34,12 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Analytics (GA4)
+
+O site usa Google Analytics 4 com Consent Mode v2. Defina `NEXT_PUBLIC_GA_ID`
+(ex.: `G-XXXXXXX`) no ambiente — em dev via `.env.local`, em produção nas
+Variables do serviço `trila-seo` no Railway. Sem a variável, nenhum script de
+analytics é carregado. O banner de consentimento (`components/ConsentBanner.tsx`)
+controla a liberação dos cookies; a escolha persiste em `localStorage`
+(`trila-consent`).

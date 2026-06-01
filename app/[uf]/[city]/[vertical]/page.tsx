@@ -73,14 +73,16 @@ export default async function CityVerticalPage({ params }: PageProps) {
       : null;
   const faqs = [
     {
-      question: `A Trila atende ${verticalEntry.singular} em ${cityEntry.city}?`,
+      question: `A Trila funciona para ${verticalEntry.singular} em ${cityEntry.city}?`,
       answer:
-        'Sim. Esta página foi criada para capturar a intenção local e mostrar a proposta da Trila para essa vertical na cidade escolhida.',
+        `Sim. A Trila atende ${verticalEntry.pluralEstablishments} em ${cityEntry.city} e região, ` +
+        `com agenda online, confirmação por WhatsApp, financeiro e histórico de cliente no mesmo fluxo.`,
     },
     {
-      question: 'Isso já vale como página indexável?',
+      question: `Quanto custa o sistema para ${verticalEntry.singular}?`,
       answer:
-        'Sim. A estrutura está preparada com metadata, canonical e conteúdo específico por combinação cidade × vertical.',
+        'Os planos começam no valor de entrada publicado na página de planos, com teste sem cartão. ' +
+        'O preço não muda por cidade — você paga pelo plano, não pela praça.',
     },
     ...verticalEntry.faqs,
   ];

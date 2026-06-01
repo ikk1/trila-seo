@@ -59,10 +59,28 @@ async function fetchMunicipalities() {
   return response.json();
 }
 
+// fetch com timeout (AbortController) + retry — evita que um município lento
+// do IBGE pendure um worker para sempre.
+async function fetchJson(url, { timeoutMs = 15000, retries = 2 } = {}) {
+  let lastError;
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      lastError = error;
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  throw lastError;
+}
+
 async function fetchTopology(id) {
-  const response = await fetch(`https://servicodados.ibge.gov.br/api/v3/malhas/municipios/${id}?formato=application/json`);
-  if (!response.ok) throw new Error(`Failed to fetch IBGE malha for ${id}: ${response.status}`);
-  return response.json();
+  return fetchJson(`https://servicodados.ibge.gov.br/api/v3/malhas/municipios/${id}?formato=application/json`);
 }
 
 // População residente estimada (agregado 6579, variável 9324), todos os municípios.
@@ -115,10 +133,16 @@ async function main() {
     const valid = municipalities.filter((m) => municipalityUf(m) != null);
     console.log(`Processing ${valid.length} municipalities (${municipalities.length - valid.length} skipped — no UF data)...`);
 
+    // Resume: pular municípios já presentes no banco (permite re-rodar após interrupção).
+    const existing = await pool.query('SELECT id FROM seo.city');
+    const seededIds = new Set(existing.rows.map((r) => Number(r.id)));
+    const pending = valid.filter((m) => !seededIds.has(Number(m.id)));
+    console.log(`${seededIds.size} já no banco — restam ${pending.length} para processar.`);
+
     let seeded = 0;
     let failed = 0;
 
-    await mapWithConcurrency(valid, 8, async (municipality) => {
+    await mapWithConcurrency(pending, 8, async (municipality) => {
       try {
         const uf = municipalityUf(municipality);
         const topology = await fetchTopology(municipality.id);
@@ -148,7 +172,7 @@ async function main() {
 
         seeded += 1;
         if (seeded % 100 === 0) {
-          console.log(`  ${seeded}/${valid.length} seeded...`);
+          console.log(`  ${seeded}/${pending.length} seeded...`);
         }
       } catch (error) {
         failed += 1;

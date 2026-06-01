@@ -10,7 +10,7 @@ import {
 import { loadCities } from '@/lib/locations';
 import { loadCityVerticalInsights } from '@/lib/city-insights';
 import { VERTICALS } from '@/lib/verticals';
-import { resolveCityVertical, buildCityVerticalDescription, buildCityVerticalTitle } from '@/lib/city-pages';
+import { resolveCityVertical, buildCityVerticalDescription, buildCityVerticalTitle, shouldIndexCityVertical } from '@/lib/city-pages';
 import { APP_URL } from '@/lib/site';
 
 type PageProps = {
@@ -48,14 +48,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const resolved = await resolveCityVertical(uf, city, vertical);
 
   if (!resolved) {
-    return {};
+    return { robots: { index: false, follow: true } };
   }
 
-  return buildMetadata({
-    title: buildCityVerticalTitle(resolved.city.city, resolved.vertical),
-    description: buildCityVerticalDescription(resolved.city.city, resolved.vertical),
-    path: `/${resolved.city.uf}/${resolved.city.slug}/${resolved.vertical.slug}`,
-  });
+  const insights =
+    typeof resolved.city.id === 'number'
+      ? await loadCityVerticalInsights(resolved.city.id, resolved.vertical.slug)
+      : null;
+  const indexable = shouldIndexCityVertical(resolved.city, insights !== null);
+
+  return {
+    ...buildMetadata({
+      title: buildCityVerticalTitle(resolved.city.city, resolved.vertical),
+      description: buildCityVerticalDescription(resolved.city.city, resolved.vertical),
+      path: `/${resolved.city.uf}/${resolved.city.slug}/${resolved.vertical.slug}`,
+    }),
+    robots: { index: indexable, follow: true },
+  };
 }
 
 export default async function CityVerticalPage({ params }: PageProps) {

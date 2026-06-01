@@ -17,8 +17,8 @@ export function updateConsent(choice: ConsentChoice) {
   if (typeof window === 'undefined' || typeof window.gtag !== 'function') return;
   window.gtag('consent', 'update', {
     analytics_storage: choice,
-    ad_storage: choice,
-    ad_user_data: choice,
-    ad_personalization: choice,
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
   });
 }

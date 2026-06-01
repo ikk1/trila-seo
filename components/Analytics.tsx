@@ -14,9 +14,9 @@ window.gtag = gtag;
 var c = 'denied';
 try { if (localStorage.getItem('${CONSENT_STORAGE_KEY}') === 'granted') c = 'granted'; } catch (e) {}
 gtag('consent', 'default', {
-  ad_storage: c,
-  ad_user_data: c,
-  ad_personalization: c,
+  ad_storage: 'denied',
+  ad_user_data: 'denied',
+  ad_personalization: 'denied',
   analytics_storage: c,
   wait_for_update: 500
 });

@@ -28,7 +28,7 @@ export async function GET() {
   return new Response(xml, {
     headers: {
       'Content-Type': 'application/xml',
-      'Cache-Control': 's-maxage=86400, stale-while-revalidate',
+      'Cache-Control': 's-maxage=86400, stale-while-revalidate=86400',
     },
   });
 }

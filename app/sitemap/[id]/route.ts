@@ -11,10 +11,13 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     return new Response('Not found', { status: 404 });
   }
   const entries = await getSitemapChunk(numId);
+  if (entries.length === 0) {
+    return new Response('Not found', { status: 404 });
+  }
   return new Response(renderUrlset(entries), {
     headers: {
       'Content-Type': 'application/xml',
-      'Cache-Control': 's-maxage=86400, stale-while-revalidate',
+      'Cache-Control': 's-maxage=86400, stale-while-revalidate=86400',
     },
   });
 }

@@ -301,6 +301,21 @@ export default async function CityVerticalPage({ params }: PageProps) {
           ))}
         </div>
       </section>
+
+      <section className="mt-16">
+        <h2 className="text-2xl text-text-main">Outros segmentos em {cityEntry.city}</h2>
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {VERTICALS.filter((v) => v.slug !== verticalEntry.slug).map((v) => (
+            <Link
+              key={v.slug}
+              href={`/${cityEntry.uf}/${cityEntry.slug}/${v.slug}`}
+              className="rounded-2xl border border-black/6 bg-white p-4 text-text-main transition-colors hover:bg-surface"
+            >
+              Sistema para {v.singular} em {cityEntry.city}
+            </Link>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }

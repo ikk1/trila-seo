@@ -126,6 +126,11 @@ async function main() {
         const slug = slugify(municipality.nome);
         const isCapital = CAPITALS.has(municipality.nome);
 
+        const populacao = populations.get(Number(municipality.id));
+        if (populacao === undefined) {
+          console.warn(`  sem populacao para ${municipality.nome} (${municipality.id}), usando 0`);
+        }
+
         await pool.query(
           `INSERT INTO seo.city (id, uf, name, slug, capital, populacao, lat, lon)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
@@ -138,7 +143,7 @@ async function main() {
              lat       = EXCLUDED.lat,
              lon       = EXCLUDED.lon,
              updated_at = now()`,
-          [municipality.id, uf.sigla, municipality.nome, slug, isCapital, populations.get(Number(municipality.id)) ?? 0, lat, lon]
+          [municipality.id, uf.sigla, municipality.nome, slug, isCapital, populacao ?? 0, lat, lon]
         );
 
         seeded += 1;

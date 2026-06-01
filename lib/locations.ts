@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { getDbPool } from './db';
 import { CITIES, type CityEntry } from './cities';
 
@@ -92,7 +93,7 @@ function catalogCity(uf: string, citySlug: string): ResolvedCityEntry | null {
 }
 
 /** Carrega UMA cidade por (uf, slug) direto do DB — sem o teto de 500. */
-export async function loadCity(uf: string, citySlug: string): Promise<ResolvedCityEntry | null> {
+export const loadCity = cache(async function loadCity(uf: string, citySlug: string): Promise<ResolvedCityEntry | null> {
   if (!process.env.SEO_DB_URL) {
     return catalogCity(uf, citySlug);
   }
@@ -118,4 +119,4 @@ export async function loadCity(uf: string, citySlug: string): Promise<ResolvedCi
   } catch {
     return catalogCity(uf, citySlug);
   }
-}
+});

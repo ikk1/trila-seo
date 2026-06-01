@@ -106,7 +106,7 @@ export async function loadCity(uf: string, citySlug: string): Promise<ResolvedCi
       `SELECT c.id, c.uf, c.name, c.slug, c.capital, c.populacao, u.region
          FROM seo.city c
          JOIN seo.uf u ON u.code = c.uf
-        WHERE lower(c.uf) = lower($1) AND c.slug = $2
+        WHERE c.uf = upper($1) AND c.slug = $2
         LIMIT 1`,
       [uf, citySlug]
     );

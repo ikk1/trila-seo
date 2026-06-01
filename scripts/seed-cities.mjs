@@ -65,6 +65,27 @@ async function fetchTopology(id) {
   return response.json();
 }
 
+// População residente estimada (agregado 6579, variável 9324), todos os municípios.
+// Retorna Map<idMunicipio(number), populacao(number)>.
+async function fetchPopulations() {
+  const url =
+    'https://servicodados.ibge.gov.br/api/v3/agregados/6579/periodos/-1/variaveis/9324?localidades=N6[all]';
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Failed to fetch IBGE populations: ${response.status}`);
+  const data = await response.json();
+  const map = new Map();
+  for (const series of data[0]?.resultados?.[0]?.series ?? []) {
+    const id = Number(series.localidade?.id);
+    const valor = Object.values(series.serie ?? {})[0];
+    const pop = Number(valor);
+    if (Number.isFinite(id) && Number.isFinite(pop)) {
+      map.set(id, pop);
+    }
+  }
+  if (map.size === 0) throw new Error('IBGE population payload returned zero entries');
+  return map;
+}
+
 async function mapWithConcurrency(items, limit, mapper) {
   const results = new Array(items.length);
   let cursor = 0;
@@ -89,6 +110,8 @@ async function main() {
 
   try {
     const municipalities = await fetchMunicipalities();
+    const populations = await fetchPopulations();
+    console.log(`Loaded population for ${populations.size} municipalities.`);
     const valid = municipalities.filter((m) => municipalityUf(m) != null);
     console.log(`Processing ${valid.length} municipalities (${municipalities.length - valid.length} skipped — no UF data)...`);
 
@@ -103,6 +126,11 @@ async function main() {
         const slug = slugify(municipality.nome);
         const isCapital = CAPITALS.has(municipality.nome);
 
+        const populacao = populations.get(Number(municipality.id));
+        if (populacao === undefined) {
+          console.warn(`  sem populacao para ${municipality.nome} (${municipality.id}), usando 0`);
+        }
+
         await pool.query(
           `INSERT INTO seo.city (id, uf, name, slug, capital, populacao, lat, lon)
            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
@@ -115,7 +143,7 @@ async function main() {
              lat       = EXCLUDED.lat,
              lon       = EXCLUDED.lon,
              updated_at = now()`,
-          [municipality.id, uf.sigla, municipality.nome, slug, isCapital, 0, lat, lon]
+          [municipality.id, uf.sigla, municipality.nome, slug, isCapital, populacao ?? 0, lat, lon]
         );
 
         seeded += 1;

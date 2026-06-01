@@ -142,7 +142,7 @@ export default async function VerticalPage({ params }: PageProps) {
           </p>
         </div>
         <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {cities.slice(0, 8).map((city) => (
+          {cities.slice(0, 24).map((city) => (
             <Link
               key={`${city.uf}-${city.slug}-${content.slug}`}
               href={`/${city.uf}/${city.slug}/${content.slug}`}

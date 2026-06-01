@@ -1,5 +1,6 @@
 import { BRAND_NAME } from './site';
 import { loadCity } from './locations';
+import type { ResolvedCityEntry } from './locations';
 import { getVerticalBySlug, type VerticalContent } from './verticals';
 
 export function buildCityPageTitle(cityLabel: string) {
@@ -27,4 +28,18 @@ export async function resolveCityVertical(uf: string, citySlug: string, vertical
   }
 
   return { city, vertical };
+}
+
+/** Limiar de população para indexar a página cidade×vertical sem dados diferenciados. */
+export const CITY_INDEX_POPULATION_THRESHOLD = 100_000;
+
+/**
+ * Decide se uma página cidade×vertical deve ser indexável.
+ * Indexa quando há dados diferenciados (insights) OU a cidade é prioritária
+ * (capital ou população >= limiar). Caso contrário, noindex até ganhar conteúdo.
+ */
+export function shouldIndexCityVertical(city: ResolvedCityEntry, hasInsights: boolean): boolean {
+  if (hasInsights) return true;
+  if (city.isCapital) return true;
+  return city.population >= CITY_INDEX_POPULATION_THRESHOLD;
 }

@@ -10,7 +10,7 @@ import {
 import { loadCities } from '@/lib/locations';
 import { loadCityVerticalInsights } from '@/lib/city-insights';
 import { VERTICALS } from '@/lib/verticals';
-import { resolveCityVertical, buildCityVerticalDescription, buildCityVerticalTitle } from '@/lib/city-pages';
+import { resolveCityVertical, buildCityVerticalDescription, buildCityVerticalTitle, shouldIndexCityVertical } from '@/lib/city-pages';
 import { APP_URL } from '@/lib/site';
 
 type PageProps = {
@@ -48,14 +48,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const resolved = await resolveCityVertical(uf, city, vertical);
 
   if (!resolved) {
-    return {};
+    return { robots: { index: false, follow: true } };
   }
 
-  return buildMetadata({
-    title: buildCityVerticalTitle(resolved.city.city, resolved.vertical),
-    description: buildCityVerticalDescription(resolved.city.city, resolved.vertical),
-    path: `/${resolved.city.uf}/${resolved.city.slug}/${resolved.vertical.slug}`,
-  });
+  const insights =
+    typeof resolved.city.id === 'number'
+      ? await loadCityVerticalInsights(resolved.city.id, resolved.vertical.slug)
+      : null;
+  const indexable = shouldIndexCityVertical(resolved.city, insights !== null);
+
+  return {
+    ...buildMetadata({
+      title: buildCityVerticalTitle(resolved.city.city, resolved.vertical),
+      description: buildCityVerticalDescription(resolved.city.city, resolved.vertical),
+      path: `/${resolved.city.uf}/${resolved.city.slug}/${resolved.vertical.slug}`,
+    }),
+    robots: { index: indexable, follow: true },
+  };
 }
 
 export default async function CityVerticalPage({ params }: PageProps) {
@@ -73,14 +82,16 @@ export default async function CityVerticalPage({ params }: PageProps) {
       : null;
   const faqs = [
     {
-      question: `A Trila atende ${verticalEntry.singular} em ${cityEntry.city}?`,
+      question: `A Trila funciona para ${verticalEntry.singular} em ${cityEntry.city}?`,
       answer:
-        'Sim. Esta página foi criada para capturar a intenção local e mostrar a proposta da Trila para essa vertical na cidade escolhida.',
+        `Sim. A Trila atende ${verticalEntry.pluralEstablishments} em ${cityEntry.city} e região, ` +
+        `com agenda online, confirmação por WhatsApp, financeiro e histórico de cliente no mesmo fluxo.`,
     },
     {
-      question: 'Isso já vale como página indexável?',
+      question: `Quanto custa o sistema para ${verticalEntry.singular}?`,
       answer:
-        'Sim. A estrutura está preparada com metadata, canonical e conteúdo específico por combinação cidade × vertical.',
+        'Os planos começam no valor de entrada publicado na página de planos, com teste sem cartão. ' +
+        'O preço não muda por cidade — você paga pelo plano, não pela praça.',
     },
     ...verticalEntry.faqs,
   ];
@@ -287,6 +298,21 @@ export default async function CityVerticalPage({ params }: PageProps) {
               <h3>{faq.question}</h3>
               <p className="mt-3 leading-7 text-text-muted">{faq.answer}</p>
             </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-16">
+        <h2 className="text-2xl text-text-main">Outros segmentos em {cityEntry.city}</h2>
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {VERTICALS.filter((v) => v.slug !== verticalEntry.slug).map((v) => (
+            <Link
+              key={v.slug}
+              href={`/${cityEntry.uf}/${cityEntry.slug}/${v.slug}`}
+              className="rounded-2xl border border-black/6 bg-white p-4 text-text-main transition-colors hover:bg-surface"
+            >
+              Sistema para {v.singular} em {cityEntry.city}
+            </Link>
           ))}
         </div>
       </section>

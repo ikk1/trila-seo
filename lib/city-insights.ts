@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { getDbPool } from './db';
 
 export type CityVerticalTicketInsight = {
@@ -44,7 +45,7 @@ function toNullableNumber(value: unknown): number | null {
   return Number.isFinite(numeric) ? numeric : null;
 }
 
-export async function loadCityVerticalInsights(
+export const loadCityVerticalInsights = cache(async function loadCityVerticalInsights(
   cityId: number,
   verticalSlug: string,
 ): Promise<CityVerticalInsights | null> {
@@ -150,4 +151,4 @@ export async function loadCityVerticalInsights(
   } catch {
     return null;
   }
-}
+});

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="trila" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d596ad"/>
+      <stop offset=".55" stop-color="#c4837a"/>
+      <stop offset="1" stop-color="#8a463e"/>
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="88" height="88" rx="26" fill="url(#trila)"/>
+  <path d="M30 33 H70" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+  <path d="M50 33 V60 C 50 70 56 72 64 70" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="66" cy="69" r="3.4" fill="#fff"/>
+</svg>

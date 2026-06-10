@@ -4,16 +4,22 @@
 // id 1 = cidades, id 2..N = pares cidade×vertical em chunks de CHUNK_SIZE.
 import { loadAllCities } from './locations';
 import { VERTICALS } from './verticals';
-import { SITE_URL, DEFAULT_LAST_MODIFIED, MIN_SITEMAP_POPULATION } from './site';
+import { CITY_INDEX_POPULATION_THRESHOLD } from './city-pages';
+import { SITE_URL, DEFAULT_LAST_MODIFIED } from './site';
 
 export const CHUNK_SIZE = 5_000;
 
-// Só promovemos no sitemap as cidades acima do limiar de população (ver
-// MIN_SITEMAP_POPULATION). Mesma fonte usada por getSitemapIds e getSitemapChunk
-// para que a contagem de chunks bata com o conteúdo de cada chunk.
+// Só promovemos no sitemap cidades que o template de fato indexa por porte (mesmo
+// limiar do noindex em shouldIndexCityVertical: população >= limiar OU capital).
+// Promover ~61k páginas programáticas órfãs num domínio novo trava tudo em
+// "Discovered - currently not indexed" (o Google não gasta crawl budget). O long
+// tail continua acessível (loadCity não tem teto) e entra em ondas. Mesma fonte
+// em getSitemapIds e getSitemapChunk para a contagem de chunks bater com o conteúdo.
 async function loadSitemapCities() {
   const cities = await loadAllCities();
-  return cities.filter((city) => city.population >= MIN_SITEMAP_POPULATION);
+  return cities.filter(
+    (city) => city.population >= CITY_INDEX_POPULATION_THRESHOLD || city.isCapital
+  );
 }
 
 export async function getSitemapIds(): Promise<number[]> {

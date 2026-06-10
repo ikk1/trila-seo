@@ -4,12 +4,20 @@
 // id 1 = cidades, id 2..N = pares cidade×vertical em chunks de CHUNK_SIZE.
 import { loadAllCities } from './locations';
 import { VERTICALS } from './verticals';
-import { SITE_URL, DEFAULT_LAST_MODIFIED } from './site';
+import { SITE_URL, DEFAULT_LAST_MODIFIED, MIN_SITEMAP_POPULATION } from './site';
 
 export const CHUNK_SIZE = 5_000;
 
-export async function getSitemapIds(): Promise<number[]> {
+// Só promovemos no sitemap as cidades acima do limiar de população (ver
+// MIN_SITEMAP_POPULATION). Mesma fonte usada por getSitemapIds e getSitemapChunk
+// para que a contagem de chunks bata com o conteúdo de cada chunk.
+async function loadSitemapCities() {
   const cities = await loadAllCities();
+  return cities.filter((city) => city.population >= MIN_SITEMAP_POPULATION);
+}
+
+export async function getSitemapIds(): Promise<number[]> {
+  const cities = await loadSitemapCities();
   const chunks = Math.ceil((cities.length * VERTICALS.length) / CHUNK_SIZE);
   return [0, 1, ...Array.from({ length: chunks }, (_, i) => i + 2)];
 }
@@ -36,7 +44,7 @@ export async function getSitemapChunk(id: number): Promise<SitemapEntry[]> {
     ];
   }
 
-  const cities = await loadAllCities();
+  const cities = await loadSitemapCities();
 
   if (id === 1) {
     return cities.map((city) => ({

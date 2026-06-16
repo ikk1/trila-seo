@@ -112,25 +112,32 @@ export const loadCity = cache(async function loadCity(uf: string, citySlug: stri
     return catalogCity(uf, citySlug);
   }
 
-  try {
-    const pool = getDbPool();
-    const { rows } = await pool.query<{
-      id: number; uf: string; name: string; slug: string;
-      capital: boolean; populacao: number; region: string;
-    }>(
-      `SELECT c.id, c.uf, c.name, c.slug, c.capital, c.populacao, u.region
+  const sql = `SELECT c.id, c.uf, c.name, c.slug, c.capital, c.populacao, u.region
          FROM seo.city c
          JOIN seo.uf u ON u.code = c.uf
         WHERE c.uf = upper($1) AND c.slug = $2
-        LIMIT 1`,
-      [uf, citySlug]
-    );
+        LIMIT 1`;
 
-    if (!rows.length) {
+  // 1 retry antes do fallback: um blip transitório de conexão não pode virar
+  // notFound() — o 404 ficaria cacheado pelo ISR. Só caímos no catálogo (que
+  // só tem ~100 cidades) quando o DB realmente falha as duas tentativas.
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const pool = getDbPool();
+      const { rows } = await pool.query<{
+        id: number; uf: string; name: string; slug: string;
+        capital: boolean; populacao: number; region: string;
+      }>(sql, [uf, citySlug]);
+
+      if (!rows.length) {
+        return catalogCity(uf, citySlug);
+      }
+      return mapDbRow(rows[0]);
+    } catch {
+      if (attempt === 0) continue;
       return catalogCity(uf, citySlug);
     }
-    return mapDbRow(rows[0]);
-  } catch {
-    return catalogCity(uf, citySlug);
   }
+
+  return catalogCity(uf, citySlug);
 });

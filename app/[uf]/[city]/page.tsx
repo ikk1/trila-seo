@@ -11,6 +11,11 @@ type PageProps = {
   params: Promise<{ uf: string; city: string }>;
 };
 
+// ISR: sem isto, um 404 transitório (ex.: blip de conexão no loadCity ao
+// renderizar on-demand uma cidade fora do generateStaticParams) ficaria
+// cacheado até o próximo deploy. Mesma proteção que a rota cidade×vertical.
+export const revalidate = 86400;
+
 export async function generateStaticParams() {
   const cities = await loadCities();
   return cities.map((entry) => ({ uf: entry.uf, city: entry.slug }));

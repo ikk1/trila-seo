@@ -57,4 +57,12 @@ describe('GET /sitemaps/[file].xml', () => {
     const res = await segGet(req(), { params: Promise.resolve({ file: 'locais-9.xml' }) });
     expect(res.status).toBe(404);
   });
+
+  it('locais-1.xml explícito -> 404 (página 1 só em locais.xml)', async () => {
+    mockCities.value = [
+      { uf: 'sp', slug: 'sao-paulo', city: 'São Paulo', population: 12_000_000, isCapital: true, region: 'Sudeste' },
+    ];
+    const res = await segGet(req(), { params: Promise.resolve({ file: 'locais-1.xml' }) });
+    expect(res.status).toBe(404);
+  });
 });

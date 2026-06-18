@@ -26,7 +26,7 @@ ${verticalLinks}
 - [Cidades](${SITE_URL}/cidades): índice de páginas locais por município.
 
 ## Recursos
-- Sitemap: ${SITE_URL}/sitemap-index.xml
+- Sitemap: ${SITE_URL}/sitemap.xml
 `;
 
   return new Response(body, {

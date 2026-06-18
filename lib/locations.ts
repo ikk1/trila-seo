@@ -97,9 +97,9 @@ export async function loadCities(): Promise<ResolvedCityEntry[]> {
 }
 
 /** All cities — used for sitemap generation only. */
-export async function loadAllCities(): Promise<ResolvedCityEntry[]> {
+export const loadAllCities = cache(async function loadAllCities(): Promise<ResolvedCityEntry[]> {
   return queryCities();
-}
+});
 
 function catalogCity(uf: string, citySlug: string): ResolvedCityEntry | null {
   const found = CITIES.find((c) => c.uf === uf && c.slug === citySlug);

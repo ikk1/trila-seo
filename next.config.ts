@@ -9,6 +9,14 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  async redirects() {
+    return [
+      { source: '/sitemap-index.xml', destination: '/sitemap.xml', permanent: true },
+      { source: '/sitemap/0', destination: '/sitemaps/core.xml', permanent: true },
+      // pares cidade×vertical e cidades-hub antigos -> locais
+      { source: '/sitemap/:id(\\d+)', destination: '/sitemaps/locais.xml', permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -13,7 +13,7 @@ export function GET() {
 
   const body = `# Trila
 
-> Sistema de gestão para salões de beleza, barbearias, clínicas de estética e spas. Agenda online 24h, WhatsApp integrado, PIX, comissões automáticas, financeiro e IA — tudo no mesmo fluxo.
+> Sistema de gestão para salões de beleza, barbearias, clínicas de estética e spas. Agenda online 24h, lembretes automáticos, PIX, comissões automáticas, financeiro e IA — tudo no mesmo fluxo.
 
 A Trila é um SaaS brasileiro para negócios de beleza e estética. O site público (${SITE_URL}) apresenta o produto e páginas por segmento e por cidade; o sistema em si fica em ${APP_URL}.
 

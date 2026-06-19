@@ -18,7 +18,7 @@ export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'Sistema de gestão para salões, barbearias e clínicas',
   description:
-    'Sistema para agenda, financeiro, WhatsApp e operação de negócios de beleza e estética.',
+    'Sistema para agenda, financeiro e operação de negócios de beleza e estética.',
   path: '/',
 });
 
@@ -30,7 +30,7 @@ const highlights = [
 
 const features = [
   'Agenda online',
-  'Confirmação por WhatsApp',
+  'Lembretes e confirmações',
   'Controle financeiro',
   'Comissões e repasses',
   'Histórico de clientes',

@@ -51,7 +51,7 @@ function parseFeatures(value: unknown): string[] {
 
 // Taglines são copy de marketing (não existem no banco) — mapeadas por nome do plano.
 const TAGLINES: Record<string, string> = {
-  Starter: 'Para quem está organizando a operação e saindo do WhatsApp + planilha.',
+  Starter: 'Para quem está organizando a operação e saindo do caderno + planilha.',
   Pro: 'Para casas em crescimento que querem IA, fidelidade e relatórios.',
 };
 
@@ -68,12 +68,11 @@ export const FALLBACK_PLANS: Plan[] = [
       'Agendamento online',
       'Portal do cliente',
       'Pagamentos via Pix',
-      'Campanhas de WhatsApp',
+      'Campanhas de marketing',
       'Até 2 profissionais',
       'Até 500 clientes',
       'Até 3 usuários',
       '2 campanhas/mês',
-      '500 envios/mês via WhatsApp',
     ],
   },
   {
@@ -86,7 +85,7 @@ export const FALLBACK_PLANS: Plan[] = [
     features: [
       'Agendamento online',
       'Pagamentos via Pix',
-      'Campanhas de WhatsApp',
+      'Campanhas de marketing',
       'Portal do cliente',
       'Insights de IA',
       'Relatórios avançados',
@@ -96,7 +95,6 @@ export const FALLBACK_PLANS: Plan[] = [
       'Clientes ilimitados',
       'Campanhas ilimitadas',
       'Usuários ilimitados',
-      '2.000 envios/mês via WhatsApp',
     ],
   },
 ];

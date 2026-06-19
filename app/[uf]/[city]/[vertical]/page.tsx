@@ -96,7 +96,7 @@ export default async function CityVerticalPage({ params }: PageProps) {
       question: `A Trila funciona para ${verticalEntry.singular} em ${cityEntry.city}?`,
       answer:
         `Sim. A Trila atende ${verticalEntry.pluralEstablishments} em ${cityEntry.city} e região, ` +
-        `com agenda online, confirmação por WhatsApp, financeiro e histórico de cliente no mesmo fluxo.`,
+        `com agenda online, confirmação e lembretes automáticos, financeiro e histórico de cliente no mesmo fluxo.`,
     },
     {
       question: `Quanto custa o sistema para ${verticalEntry.singular}?`,

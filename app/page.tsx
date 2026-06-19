@@ -194,8 +194,9 @@ export default async function HomePage() {
               </p>
               <h3 className="mt-4 text-2xl text-text-main">{vertical.headline}</h3>
               <p className="mt-4 leading-7 text-text-muted">{vertical.description}</p>
-              <span className="mt-6 inline-flex font-semibold text-primary">
+              <span className="mt-6 inline-flex items-center gap-1 font-semibold text-primary">
                 Ver página da vertical
+                <span aria-hidden className="transition-transform group-hover:translate-x-0.5">→</span>
               </span>
             </Link>
           ))}
@@ -225,8 +226,9 @@ export default async function HomePage() {
           ))}
         </div>
         <div className="mt-8">
-          <Link href="/cidades" className="font-semibold text-primary">
+          <Link href="/cidades" className="inline-flex items-center gap-1 font-semibold text-primary">
             Ver índice completo de cidades
+            <span aria-hidden>→</span>
           </Link>
         </div>
       </section>

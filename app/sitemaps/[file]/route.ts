@@ -4,6 +4,7 @@
 import {
   getCoreEntries,
   getVerticaisEntries,
+  getGuiasEntries,
   getLocaisPage,
   getLocaisPageCount,
   renderUrlset,
@@ -30,6 +31,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ fil
 
   if (file === 'core.xml') return xml(renderUrlset(getCoreEntries()));
   if (file === 'verticais.xml') return xml(renderUrlset(getVerticaisEntries()));
+  if (file === 'guias.xml') return xml(renderUrlset(getGuiasEntries()));
 
   // locais.xml = página 1; locais-2.xml, locais-3.xml = páginas seguintes.
   const locaisMatch = /^locais(?:-(\d+))?\.xml$/.exec(file);

@@ -5,6 +5,7 @@
 //   verticais.xml -> /sistema-para-{vertical}
 //   locais.xml    -> cidades-hub + pares cidade×vertical (paginado em locais-N.xml)
 import { loadAllCities } from './locations';
+import { listGuides } from './guides';
 import { VERTICALS } from './verticals';
 import { CITY_INDEX_POPULATION_THRESHOLD } from './city-pages';
 import { SITE_URL, SITEMAP_LASTMOD } from './site';
@@ -47,6 +48,25 @@ export function getVerticaisEntries(): SitemapEntry[] {
   }));
 }
 
+export function getGuiasEntries(): SitemapEntry[] {
+  const guides = listGuides();
+  const verticais = [...new Set(guides.map((g) => g.vertical))];
+  const entries: SitemapEntry[] = [
+    { loc: `${SITE_URL}/guias`, changefreq: 'monthly', priority: 0.7 },
+    ...verticais.map((v) => ({
+      loc: `${SITE_URL}/guias/${v}`,
+      changefreq: 'monthly',
+      priority: 0.7,
+    })),
+    ...guides.map((g) => ({
+      loc: `${SITE_URL}/guias/${g.vertical}/${g.topic}`,
+      changefreq: 'monthly',
+      priority: 0.6,
+    })),
+  ];
+  return entries;
+}
+
 export async function getLocaisEntries(): Promise<SitemapEntry[]> {
   const cities = await loadSitemapCities();
   const hubs = cities.map((city) => ({
@@ -76,7 +96,12 @@ export async function getLocaisPage(page: number): Promise<SitemapEntry[]> {
 }
 
 export async function getSitemapIndex(): Promise<string[]> {
-  const paths = ['/sitemaps/core.xml', '/sitemaps/verticais.xml', '/sitemaps/locais.xml'];
+  const paths = [
+    '/sitemaps/core.xml',
+    '/sitemaps/verticais.xml',
+    '/sitemaps/guias.xml',
+    '/sitemaps/locais.xml',
+  ];
   const pages = await getLocaisPageCount();
   for (let p = 2; p <= pages; p++) {
     paths.push(`/sitemaps/locais-${p}.xml`);

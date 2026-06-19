@@ -78,6 +78,14 @@ export function SiteFooter() {
                 </Link>
               </li>
               <li>
+                <Link
+                  href="/guias"
+                  className="text-sm text-white/65 transition-colors hover:text-white"
+                >
+                  Guias
+                </Link>
+              </li>
+              <li>
                 <a
                   href={APP_URL}
                   className="text-sm text-white/65 transition-colors hover:text-white"

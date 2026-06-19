@@ -1,6 +1,6 @@
 // app/sitemaps/[file]/route.ts
-// Serve os sitemaps nomeados: core.xml, verticais.xml, locais.xml, locais-N.xml.
-// Gerado em runtime (ISR 1 dia) — locais depende do Postgres interno.
+// Serve os sitemaps nomeados: core.xml, verticais.xml, guias.xml, locais.xml, locais-N.xml.
+// Gerado em runtime (ISR 1 dia) — locais depende do Postgres interno; guias lê arquivos.
 import {
   getCoreEntries,
   getVerticaisEntries,

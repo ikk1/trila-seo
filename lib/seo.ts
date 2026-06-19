@@ -100,3 +100,29 @@ export function buildBreadcrumbJsonLd(items: Array<{ name: string; path: string 
     })),
   };
 }
+
+export function buildArticleJsonLd(input: {
+  title: string;
+  description: string;
+  path: string;
+  updatedAt: string;
+}) {
+  const url = absoluteUrl(input.path);
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: input.title,
+    description: input.description,
+    mainEntityOfPage: url,
+    url,
+    inLanguage: 'pt-BR',
+    datePublished: input.updatedAt,
+    dateModified: input.updatedAt,
+    author: { '@type': 'Organization', name: BRAND_NAME },
+    publisher: {
+      '@type': 'Organization',
+      name: BRAND_NAME,
+      logo: { '@type': 'ImageObject', url: absoluteUrl(DEFAULT_OG_IMAGE) },
+    },
+  };
+}

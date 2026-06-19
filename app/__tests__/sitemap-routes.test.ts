@@ -38,6 +38,12 @@ describe('GET /sitemaps/[file].xml', () => {
     expect(await res.text()).toContain('/sistema-para-');
   });
 
+  it('guias.xml -> urlset com /guias', async () => {
+    const res = await segGet(req(), { params: Promise.resolve({ file: 'guias.xml' }) });
+    expect(res.status).toBe(200);
+    expect(await res.text()).toContain('/guias');
+  });
+
   it('locais.xml -> urlset', async () => {
     mockCities.value = [
       { uf: 'sp', slug: 'sao-paulo', city: 'São Paulo', population: 12_000_000, isCapital: true, region: 'Sudeste' },

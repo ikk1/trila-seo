@@ -6,6 +6,7 @@ import { loadCities } from '@/lib/locations';
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildMetadata } from '@/lib/seo';
 import { APP_URL } from '@/lib/site';
 import { VERTICALS, getVerticalBySlug } from '@/lib/verticals';
+import { listGuidesByVertical } from '@/lib/guides';
 
 type PageProps = {
   params: Promise<{ vertical: string }>;
@@ -33,11 +34,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function VerticalPage({ params }: PageProps) {
   const { vertical } = await params;
   const content = getVerticalBySlug(vertical);
-  const cities = await loadCities();
 
   if (!content) {
     notFound();
   }
+
+  const cities = await loadCities();
+  const guias = listGuidesByVertical(content.slug).slice(0, 6);
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-20">
@@ -157,6 +160,27 @@ export default async function VerticalPage({ params }: PageProps) {
           ))}
         </div>
       </section>
+
+      {guias.length > 0 && (
+        <section className="mt-16">
+          <h2>Guias para {content.singular}</h2>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            {guias.map((g) => (
+              <Link
+                key={g.topic}
+                href={`/guias/${content.slug}/${g.topic}`}
+                className="rounded-[20px] border border-black/6 bg-white p-5 shadow-[var(--shadow-card)] hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]"
+              >
+                <h3 className="text-lg">{g.frontmatter.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-text-muted">{g.frontmatter.description}</p>
+              </Link>
+            ))}
+          </div>
+          <Link href={`/guias/${content.slug}`} className="mt-6 inline-block text-primary hover:underline">
+            Ver todos os guias de {content.singular} →
+          </Link>
+        </section>
+      )}
     </main>
   );
 }

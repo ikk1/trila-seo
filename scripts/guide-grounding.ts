@@ -24,6 +24,8 @@ const FALLBACK: Record<string, { ticketP50: number; priceRanges: GroundingData['
   esteticista: { ticketP50: 150, priceRanges: [{ service: 'procedimento', min: 100, max: 300 }], establishments: 0 },
 };
 
+const DEFAULT_FALLBACK = { ticketP50: 90, priceRanges: [{ service: 'serviço', min: 60, max: 200 }], establishments: 0 };
+
 export async function buildGroundingData(verticalSlug: string): Promise<GroundingData> {
   const content = getVerticalBySlug(verticalSlug);
   if (!content) throw new Error(`Vertical desconhecida: ${verticalSlug}`);
@@ -40,7 +42,7 @@ export async function buildGroundingData(verticalSlug: string): Promise<Groundin
   };
 
   if (!process.env.SEO_DB_URL) {
-    const fb = FALLBACK[verticalSlug];
+    const fb = FALLBACK[verticalSlug] ?? DEFAULT_FALLBACK;
     return { ...base, ticketP50: fb.ticketP50, priceRanges: fb.priceRanges, establishments: fb.establishments, grounded: false };
   }
 
@@ -71,13 +73,13 @@ export async function buildGroundingData(verticalSlug: string): Promise<Groundin
     const grounded = ticketP50 != null || priceRanges.length > 0;
 
     if (!grounded) {
-      const fb = FALLBACK[verticalSlug];
+      const fb = FALLBACK[verticalSlug] ?? DEFAULT_FALLBACK;
       return { ...base, ticketP50: fb.ticketP50, priceRanges: fb.priceRanges, establishments, grounded: false };
     }
     return { ...base, ticketP50, priceRanges, establishments, grounded: true };
   } catch (err) {
     console.warn(`[grounding] falha no DB para ${verticalSlug}, usando fallback:`, (err as Error).message);
-    const fb = FALLBACK[verticalSlug];
+    const fb = FALLBACK[verticalSlug] ?? DEFAULT_FALLBACK;
     return { ...base, ticketP50: fb.ticketP50, priceRanges: fb.priceRanges, establishments: fb.establishments, grounded: false };
   }
 }

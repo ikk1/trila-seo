@@ -9,6 +9,7 @@ export function buildGuidePrompt(args: {
   grounding: GroundingData;
 }): string {
   const { verticalSlug, topicSlug, grounding } = args;
+  const hoje = new Date().toISOString().slice(0, 10);
   const topic = getTopicBySlug(topicSlug);
   const tipoFunil = topic?.funnel ?? 'topo';
   const ticket = grounding.ticketP50 != null ? `R$ ${grounding.ticketP50}` : 'sem dado';
@@ -35,7 +36,7 @@ export function buildGuidePrompt(args: {
     `description: (meta description, 150–160 caracteres)`,
     `vertical: ${verticalSlug}`,
     `topic: ${topicSlug}`,
-    `updatedAt: 2026-06-19`,
+    `updatedAt: ${hoje}`,
     `keyTakeaways: (3 a 5 itens curtos)`,
     `faq: (3 a 5 itens, cada um com "q" e "answer")`,
     `---`,

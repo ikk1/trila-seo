@@ -67,4 +67,9 @@ describe('validateFrontmatter', () => {
   it('lança se faq tiver formato errado', () => {
     expect(() => validateFrontmatter({ ...ok, faq: [{ pergunta: 'x' }] })).toThrow();
   });
+  it('normaliza Date para string ISO quando gray-matter retorna Date', () => {
+    const result = validateFrontmatter({ ...ok, updatedAt: new Date('2026-06-19') });
+    expect(typeof result.updatedAt).toBe('string');
+    expect(result.updatedAt).toBe('2026-06-19');
+  });
 });

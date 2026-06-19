@@ -71,7 +71,7 @@ describe('paginação de locais', () => {
     mockCities.value = [city({ slug: 'grande', population: 200_000 })];
     expect(await getLocaisPageCount()).toBe(1);
     const index = await getSitemapIndex();
-    expect(index).toEqual(['/sitemaps/core.xml', '/sitemaps/verticais.xml', '/sitemaps/locais.xml']);
+    expect(index).toEqual(['/sitemaps/core.xml', '/sitemaps/verticais.xml', '/sitemaps/guias.xml', '/sitemaps/locais.xml']);
   });
 
   it('divide em locais-2.xml quando passa de 45k URLs', async () => {

@@ -30,7 +30,7 @@ const capabilities = [
   },
   {
     title: 'Sugere campanhas prontas',
-    body: 'Quando faz sentido reativar clientes ou preencher horários, a IA já indica a campanha de WhatsApp a disparar — você revisa e envia.',
+    body: 'Quando faz sentido reativar clientes ou preencher horários, a IA já indica a campanha a disparar — você revisa e envia.',
   },
   {
     title: 'Resume novidades em português claro',
@@ -40,9 +40,9 @@ const capabilities = [
 
 const faqs = [
   {
-    question: 'A IA agenda clientes sozinha pelo WhatsApp?',
+    question: 'A IA agenda clientes sozinha?',
     answer:
-      'O assistente de WhatsApp responde dúvidas comuns e direciona o cliente para o agendamento, mas quem confirma o horário é você ou o cliente pelo portal. A IA acelera o atendimento, não substitui sua decisão.',
+      'A IA responde dúvidas comuns e direciona o cliente para o agendamento no portal, mas quem confirma o horário é você ou o cliente. A IA acelera o atendimento, não substitui sua decisão.',
   },
   {
     question: 'Preciso entender de tecnologia para usar?',

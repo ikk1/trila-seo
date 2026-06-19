@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: `%s | ${BRAND_NAME}`,
   },
   description:
-    'Sistema completo para salão de beleza, barbearia, clínica estética e spa. Agenda online, WhatsApp, financeiro e operação no mesmo fluxo.',
+    'Sistema completo para salão de beleza, barbearia, clínica estética e spa. Agenda online, financeiro e operação no mesmo fluxo.',
   alternates: {
     canonical: SITE_URL,
   },

@@ -19,18 +19,18 @@ export const VERTICALS: VerticalContent[] = [
     singular: 'salão de beleza',
     pluralEstablishments: 'salões de beleza',
     pluralProfessionals: 'profissionais de beleza',
-    headline: 'Sistema para salão de beleza com agenda, financeiro e WhatsApp no mesmo fluxo',
+    headline: 'Sistema para salão de beleza com agenda, financeiro e CRM no mesmo fluxo',
     description:
       'A Trila organiza agenda, confirmações, repasses e recorrência operacional para salões que querem crescer sem virar reféns de planilhas.',
     hero:
       'Para salões com operação cheia, múltiplos profissionais e necessidade de controle fino da agenda e do caixa.',
     painPoints: [
-      'Agenda quebrada entre recepção, WhatsApp e caderno.',
+      'Agenda quebrada entre recepção, telefone e caderno.',
       'Comissões fechadas no improviso no fim do mês.',
       'Falta de visão sobre retorno, no-show e ocupação por profissional.',
     ],
     features: [
-      'Agenda com confirmação e lembrete por WhatsApp.',
+      'Agenda com confirmação e lembrete automáticos.',
       'Caixa, comissões e fechamento diário no mesmo painel.',
       'Histórico de clientes, recorrência e campanhas de reativação.',
     ],
@@ -57,7 +57,7 @@ export const VERTICALS: VerticalContent[] = [
     description:
       'A Trila ajuda barbearias a reduzir furos na agenda, acelerar o atendimento e manter visão de ticket, recorrência e produtividade.',
     hero:
-      'Ideal para barbearias que operam com encaixes, alta frequência de retorno e atendimento puxado por WhatsApp.',
+      'Ideal para barbearias que operam com encaixes, alta frequência de retorno e alta demanda de agendamentos.',
     painPoints: [
       'Clientes pedem encaixe o dia inteiro e a agenda vira um caos.',
       'Retorno recorrente existe, mas ninguém acompanha frequência nem ticket.',

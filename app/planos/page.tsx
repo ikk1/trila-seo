@@ -11,7 +11,7 @@ export const revalidate = 3600;
 export const metadata = buildMetadata({
   title: 'Planos e preços da Trila',
   description:
-    'Planos da Trila a partir de R$ 49,90/mês. Comece com 14 dias grátis, sem cartão de crédito, e organize agenda, financeiro e WhatsApp do seu negócio de beleza.',
+    'Planos da Trila a partir de R$ 49,90/mês. Comece com 14 dias grátis, sem cartão de crédito, e organize agenda, financeiro e operação do seu negócio de beleza.',
   path: '/planos',
 });
 

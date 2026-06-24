@@ -4,9 +4,9 @@ import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildMetadata } from '@/lib/seo'
 import { loadPlans, formatBRL, getLowestPlanPrice, TRIAL_LABEL, TRIAL_DAYS, PLAN_CTA } from '@/lib/plans';
 import { APP_URL } from '@/lib/site';
 
-// Revalida de hora em hora: mudanças de preço/recursos feitas no admin refletem no
+// Revalida a cada 60s: mudanças de preço/recursos feitas no admin refletem no
 // site sem precisar de novo deploy. A página continua sendo servida estaticamente.
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export const metadata = buildMetadata({
   title: 'Planos e preços da Trila',

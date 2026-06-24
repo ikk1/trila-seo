@@ -1,9 +1,9 @@
-// Planos comerciais. Fonte de verdade: tabela subscription_plans no banco do backend
-// (a mesma que o app e o admin usam). O site lê de lá para que preço/recursos nunca
-// divirjam do que é realmente cobrado. FALLBACK_PLANS só entra como resiliência se o
-// banco estiver indisponível no build/runtime — nunca como fonte de preço autoritativa.
+// Planos comerciais. Fonte de verdade: tabela subscription_plans no backend, lida via a
+// API pública GET /api/v1/plans/public (mesma que o app/admin usam). O site lê de lá para
+// que preço/recursos/tagline nunca divirjam do que é cobrado. FALLBACK_PLANS só entra como
+// resiliência se a API estiver indisponível — nunca como fonte autoritativa.
 
-import { getDbPool } from './db';
+import { API_URL } from './site';
 
 export const TRIAL_DAYS = 14;
 export const TRIAL_LABEL = `${TRIAL_DAYS} dias grátis, sem cartão`;
@@ -99,53 +99,46 @@ export const FALLBACK_PLANS: Plan[] = [
   },
 ];
 
-type PlanRow = {
+type PublicPlan = {
   name: string;
   price: unknown;
   features: unknown;
   highlighted: boolean | null;
-  badge_text: string | null;
+  badgeText: string | null;
+  tagline: string | null;
 };
 
 /**
- * Carrega os planos ativos do banco. Cai para FALLBACK_PLANS se SEO_DB_URL não estiver
- * configurado ou a query falhar — o site de preços nunca deve ficar sem conteúdo.
+ * Carrega os planos ativos da API pública do backend (a mesma fonte que o admin grava).
+ * Revalida a cada 60s. Cai para FALLBACK_PLANS se a API falhar ou vier vazia — a página
+ * de preços nunca deve ficar sem conteúdo.
  */
 export async function loadPlans(): Promise<Plan[]> {
-  if (!process.env.SEO_DB_URL) {
-    return FALLBACK_PLANS;
-  }
-
   try {
-    const pool = getDbPool();
-    const { rows } = await pool.query<PlanRow>(
-      `
-        SELECT name, price, features, COALESCE(highlighted, false) AS highlighted, badge_text
-        FROM subscription_plans
-        WHERE active = true
-        ORDER BY sort_order ASC NULLS LAST, price ASC
-      `,
-    );
+    const res = await fetch(`${API_URL}/api/v1/plans/public`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return FALLBACK_PLANS;
 
-    if (rows.length === 0) {
-      return FALLBACK_PLANS;
-    }
+    const rows = (await res.json()) as PublicPlan[];
+    if (!Array.isArray(rows) || rows.length === 0) return FALLBACK_PLANS;
 
     return rows.map((row) => {
       const price = toNumber(row.price);
       const features = parseFeatures(row.features);
+      const tagline = (row.tagline && row.tagline.trim()) || TAGLINES[row.name] || '';
       return {
         name: row.name,
         price,
         priceLabel: formatBRL(price),
-        tagline: TAGLINES[row.name] ?? '',
+        tagline,
         highlighted: Boolean(row.highlighted),
-        badge: row.badge_text ?? undefined,
+        badge: row.badgeText ?? undefined,
         features,
       };
     });
   } catch (error) {
-    console.warn('[plans] failed to load from DB, using fallback:', error);
+    console.warn('[plans] failed to load from API, using fallback:', error);
     return FALLBACK_PLANS;
   }
 }

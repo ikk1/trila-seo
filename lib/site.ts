@@ -1,5 +1,6 @@
 export const SITE_URL = 'https://trila.app.br';
 export const APP_URL = 'https://sistema.trila.app.br';
+export const API_URL = 'https://api.trila.app.br';
 export const BRAND_NAME = 'Trila';
 export const DEFAULT_OG_IMAGE = '/og-default.png';
 

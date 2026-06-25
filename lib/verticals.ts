@@ -4,6 +4,8 @@ export interface VerticalContent {
   singular: string;
   pluralEstablishments: string;
   pluralProfessionals: string;
+  /** Title tag curto e funcional p/ o SERP (<=60 chars) — sem citar WhatsApp. */
+  seoTitle: string;
   headline: string;
   description: string;
   hero: string;
@@ -19,6 +21,7 @@ export const VERTICALS: VerticalContent[] = [
     singular: 'salão de beleza',
     pluralEstablishments: 'salões de beleza',
     pluralProfessionals: 'profissionais de beleza',
+    seoTitle: 'Sistema para salão de beleza: agenda, caixa e comissões',
     headline: 'Sistema para salão de beleza com agenda, financeiro e CRM no mesmo fluxo',
     description:
       'A Trila organiza agenda, confirmações, repasses e recorrência operacional para salões que querem crescer sem virar reféns de planilhas.',
@@ -53,6 +56,7 @@ export const VERTICALS: VerticalContent[] = [
     singular: 'barbearia',
     pluralEstablishments: 'barbearias',
     pluralProfessionals: 'barbeiros',
+    seoTitle: 'Sistema para barbearia: agenda, comissões e recorrência',
     headline: 'Sistema para barbearia com agenda rápida e controle de recorrência',
     description:
       'A Trila ajuda barbearias a reduzir furos na agenda, acelerar o atendimento e manter visão de ticket, recorrência e produtividade.',
@@ -87,6 +91,7 @@ export const VERTICALS: VerticalContent[] = [
     singular: 'clínica de estética',
     pluralEstablishments: 'clínicas de estética',
     pluralProfessionals: 'esteticistas',
+    seoTitle: 'Sistema para clínica de estética: agenda e pacotes',
     headline: 'Sistema para clínica de estética com jornada da cliente, agenda e previsibilidade',
     description:
       'A Trila estrutura acompanhamento, recorrência e controle operacional para clínicas que precisam vender continuidade e não apenas horários soltos.',
@@ -121,6 +126,7 @@ export const VERTICALS: VerticalContent[] = [
     singular: 'spa',
     pluralEstablishments: 'spas',
     pluralProfessionals: 'terapeutas',
+    seoTitle: 'Sistema para spa: agenda, pacotes e financeiro',
     headline: 'Sistema para spa com agenda premium e operação sem ruído',
     description:
       'A Trila dá estrutura para spas que precisam combinar experiência, previsibilidade e controle de agenda em atendimentos mais longos.',
@@ -155,6 +161,7 @@ export const VERTICALS: VerticalContent[] = [
     singular: 'espaço de manicure',
     pluralEstablishments: 'espaços de manicure',
     pluralProfessionals: 'manicures e pedicures',
+    seoTitle: 'Sistema para manicure: agenda, caixa e recorrência',
     headline: 'Sistema para manicure com agenda recorrente e controle simples',
     description:
       'A Trila organiza atendimento recorrente, confirmações e caixa para espaços com giro alto e necessidade de agilidade.',
@@ -189,6 +196,7 @@ export const VERTICALS: VerticalContent[] = [
     singular: 'nail studio',
     pluralEstablishments: 'nail studios',
     pluralProfessionals: 'nail designers',
+    seoTitle: 'Sistema para nail studio: agenda e financeiro',
     headline: 'Sistema para nail studio com agenda organizada e atendimento consistente',
     description:
       'A Trila apoia nail studios que precisam dar previsibilidade ao dia, manter padrão de atendimento e organizar a recorrência das clientes.',
@@ -223,6 +231,7 @@ export const VERTICALS: VerticalContent[] = [
     singular: 'centro de beleza',
     pluralEstablishments: 'centros de beleza',
     pluralProfessionals: 'profissionais de beleza',
+    seoTitle: 'Sistema para centro de beleza: agenda e financeiro',
     headline: 'Sistema para centro de beleza com operação multi-serviço e visão central',
     description:
       'A Trila conecta agenda, recepção e gestão para centros de beleza com várias frentes de serviço e necessidade de coordenação.',
@@ -257,6 +266,7 @@ export const VERTICALS: VerticalContent[] = [
     singular: 'espaço de estética',
     pluralEstablishments: 'espaços de estética',
     pluralProfessionals: 'esteticistas autônomos',
+    seoTitle: 'Sistema para esteticista: agenda, caixa e clientes',
     headline: 'Sistema para esteticista com mais controle da agenda e da recorrência',
     description:
       'A Trila ajuda profissionais e espaços de estética a manter uma operação organizada, previsível e preparada para crescer.',

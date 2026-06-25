@@ -16,9 +16,9 @@ import { VERTICALS } from '@/lib/verticals';
 export const revalidate = 3600;
 
 export const metadata = buildMetadata({
-  title: 'Sistema de gestão para salões, barbearias e clínicas',
+  title: 'Sistema para salão de beleza, barbearia e estética',
   description:
-    'Sistema para agenda, financeiro e operação de negócios de beleza e estética.',
+    'Agenda online, controle de caixa, comissões e CRM num sistema só, com IA que sugere o que fazer no dia. 14 dias grátis, sem cartão.',
   path: '/',
 });
 

@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   }
 
   return buildMetadata({
-    title: `Sistema para ${content.singular}`,
+    title: content.seoTitle,
     description: content.description,
     path: `/sistema-para-${content.slug}`,
   });

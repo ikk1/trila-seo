@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { JsonLd } from '@/components/JsonLd';
 import { loadCities } from '@/lib/locations';
+import { isCuratedCity } from '@/lib/city-pages';
 import { buildBreadcrumbJsonLd, buildMetadata } from '@/lib/seo';
 
 export const metadata = buildMetadata({
@@ -13,7 +14,7 @@ export const metadata = buildMetadata({
 const REGION_ORDER = ['Sudeste', 'Sul', 'Centro-Oeste', 'Nordeste', 'Norte'];
 
 export default async function CitiesIndexPage() {
-  const cities = await loadCities();
+  const cities = (await loadCities()).filter(isCuratedCity);
   const grouped = REGION_ORDER.map((region) => ({
     region,
     cities: cities.filter((city) => city.region === region),

@@ -5,7 +5,7 @@ import { JsonLd } from '@/components/JsonLd';
 import { buildBreadcrumbJsonLd, buildMetadata } from '@/lib/seo';
 import { loadCities, loadCity } from '@/lib/locations';
 import { VERTICALS } from '@/lib/verticals';
-import { buildCityPageDescription, buildCityPageTitle } from '@/lib/city-pages';
+import { buildCityPageDescription, buildCityPageTitle, isCuratedCity } from '@/lib/city-pages';
 
 type PageProps = {
   params: Promise<{ uf: string; city: string }>;
@@ -17,7 +17,7 @@ type PageProps = {
 export const revalidate = 86400;
 
 export async function generateStaticParams() {
-  const cities = await loadCities();
+  const cities = (await loadCities()).filter(isCuratedCity);
   return cities.map((entry) => ({ uf: entry.uf, city: entry.slug }));
 }
 
@@ -40,7 +40,9 @@ export default async function CityPage({ params }: PageProps) {
   const { uf, city } = await params;
   const entry = await loadCity(uf, city);
 
-  if (!entry) {
+  // Cidade fora do índice curado → 404 (não 200+noindex), para o Google esvaziar
+  // a fila "Discovered - currently not indexed" do long tail programático.
+  if (!entry || !isCuratedCity(entry)) {
     notFound();
   }
 

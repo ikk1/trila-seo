@@ -7,22 +7,20 @@
 import { loadAllCities } from './locations';
 import { listGuides } from './guides';
 import { VERTICALS } from './verticals';
-import { CITY_INDEX_POPULATION_THRESHOLD } from './city-pages';
+import { isCuratedCity } from './city-pages';
 import { SITE_URL, SITEMAP_LASTMOD } from './site';
 
 export const LOCAIS_CHUNK_SIZE = 45_000;
 
 export type SitemapEntry = { loc: string; changefreq: string; priority: number };
 
-// Só promovemos cidades que o template de fato indexa por porte (mesmo limiar do
-// noindex em shouldIndexCityVertical: população >= limiar OU capital). Promover
-// páginas programáticas órfãs num domínio novo trava tudo em "Discovered - currently
-// not indexed". O long tail continua acessível e entra em ondas.
+// Só promovemos cidades curadas (capital OU população >= limiar). Promover páginas
+// programáticas órfãs num domínio novo trava tudo em "Discovered - currently not
+// indexed". Fonte única do critério: isCuratedCity — as rotas dinâmicas usam a mesma
+// regra para retornar 404 fora dela, mantendo sitemap, links e páginas alinhados.
 async function loadSitemapCities() {
   const cities = await loadAllCities();
-  return cities.filter(
-    (city) => city.population >= CITY_INDEX_POPULATION_THRESHOLD || city.isCapital,
-  );
+  return cities.filter(isCuratedCity);
 }
 
 function cityPriorities(population: number): { hub: number; vertical: number } {

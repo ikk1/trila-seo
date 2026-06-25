@@ -11,7 +11,7 @@ import { loadCities } from '@/lib/locations';
 import { loadCityVerticalInsights } from '@/lib/city-insights';
 import { loadCityVerticalMarket } from '@/lib/city-market';
 import { VERTICALS } from '@/lib/verticals';
-import { resolveCityVertical, buildCityVerticalDescription, buildCityVerticalTitle, shouldIndexCityVertical } from '@/lib/city-pages';
+import { resolveCityVertical, buildCityVerticalDescription, buildCityVerticalTitle, shouldIndexCityVertical, isCuratedCity } from '@/lib/city-pages';
 import { APP_URL } from '@/lib/site';
 
 type PageProps = {
@@ -36,7 +36,7 @@ const percent = new Intl.NumberFormat('pt-BR', {
 const count = new Intl.NumberFormat('pt-BR');
 
 export async function generateStaticParams() {
-  const cities = await loadCities();
+  const cities = (await loadCities()).filter(isCuratedCity);
   return cities.flatMap((city) =>
     VERTICALS.map((vertical) => ({
       uf: city.uf,
@@ -50,7 +50,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { uf, city, vertical } = await params;
   const resolved = await resolveCityVertical(uf, city, vertical);
 
-  if (!resolved) {
+  if (!resolved || !isCuratedCity(resolved.city)) {
     return { robots: { index: false, follow: true } };
   }
 
@@ -78,7 +78,9 @@ export default async function CityVerticalPage({ params }: PageProps) {
   const { uf, city, vertical } = await params;
   const resolved = await resolveCityVertical(uf, city, vertical);
 
-  if (!resolved) {
+  // Cidade fora do índice curado → 404 (não 200+noindex), para o Google esvaziar
+  // a fila "Discovered - currently not indexed" do long tail programático.
+  if (!resolved || !isCuratedCity(resolved.city)) {
     notFound();
   }
 

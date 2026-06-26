@@ -31,14 +31,14 @@ export const LP_HERO_COPY: Record<LpVerticalSlug, LpHeroCopy> = {
     eyebrow: 'Para barbearias',
     headline: 'Sua barbearia com a agenda cheia e zero falta',
     subheadline:
-      'Agenda, lembrete no WhatsApp, financeiro e comissões num sistema só. Pare de perder cliente no caderno e na memória.',
+      'Agenda, confirmação de horário, financeiro e comissões num sistema só. Pare de perder cliente no caderno e na memória.',
     services: ['Corte + Barba', 'Corte na máquina', 'Barba'],
   },
   'salao-de-beleza': {
     eyebrow: 'Para salões de beleza',
     headline: 'Seu salão de beleza com a agenda cheia e zero falta',
     subheadline:
-      'Agenda, lembrete no WhatsApp, financeiro e comissões num sistema só. Pare de perder cliente no caderno e na memória.',
+      'Agenda, confirmação de horário, financeiro e comissões num sistema só. Pare de perder cliente no caderno e na memória.',
     services: ['Escova + Hidratação', 'Corte feminino', 'Coloração'],
   },
 };

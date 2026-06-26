@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { VERTICALS } from '@/lib/verticals';
 import { APP_URL } from '@/lib/site';
+import { isLpPath } from '@/lib/lp';
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -38,6 +39,9 @@ export function SiteHeader() {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, []);
+
+  // Landing pages de Ads não têm chrome do site: foco total no CTA.
+  if (isLpPath(pathname)) return null;
 
   return (
     <header

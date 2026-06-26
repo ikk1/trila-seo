@@ -3,6 +3,7 @@ import { Outfit, Plus_Jakarta_Sans } from 'next/font/google';
 import { BRAND_NAME, DEFAULT_OG_IMAGE, SITE_URL } from '@/lib/site';
 import { SiteHeader } from '@/components/SiteHeader';
 import { SiteFooter } from '@/components/SiteFooter';
+import { ChromeGate } from '@/components/ChromeGate';
 import { Analytics } from '@/components/Analytics';
 import { ConsentBanner } from '@/components/ConsentBanner';
 import './globals.css';
@@ -53,8 +54,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
         <SiteHeader />
         {children}
-        <SiteFooter />
-        <ConsentBanner />
+        <ChromeGate>
+          <SiteFooter />
+          <ConsentBanner />
+        </ChromeGate>
       </body>
     </html>
   );

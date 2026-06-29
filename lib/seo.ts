@@ -32,10 +32,17 @@ export function buildMetadata({ title, description, path }: MetadataInput): Meta
   };
 }
 
+// Âncora estável da entidade Organization. O mesmo @id é repetido em toda menção
+// à marca (Organization na home, provider do SoftwareApplication, publisher dos
+// artigos) para o Google fundir tudo num único nó de entidade no grafo de
+// conhecimento — base para um painel de marca e para "travar" o SERP de "Trila".
+export const ORGANIZATION_ID = absoluteUrl('/#organization');
+
 export function buildOrganizationJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
+    '@id': ORGANIZATION_ID,
     name: BRAND_NAME,
     url: SITE_URL,
     logo: absoluteUrl(DEFAULT_OG_IMAGE),
@@ -69,6 +76,13 @@ export function buildSoftwareJsonLd(lowestPlanPrice = 49.9) {
       priceCurrency: 'BRL',
       url: absoluteUrl('/planos'),
       availability: 'https://schema.org/InStock',
+    },
+    // Amarra o software à mesma entidade de marca (mesmo @id da Organization).
+    provider: {
+      '@type': 'Organization',
+      '@id': ORGANIZATION_ID,
+      name: BRAND_NAME,
+      url: SITE_URL,
     },
   };
 }
@@ -118,9 +132,10 @@ export function buildArticleJsonLd(input: {
     inLanguage: 'pt-BR',
     datePublished: input.updatedAt,
     dateModified: input.updatedAt,
-    author: { '@type': 'Organization', name: BRAND_NAME },
+    author: { '@type': 'Organization', '@id': ORGANIZATION_ID, name: BRAND_NAME },
     publisher: {
       '@type': 'Organization',
+      '@id': ORGANIZATION_ID,
       name: BRAND_NAME,
       logo: { '@type': 'ImageObject', url: absoluteUrl(DEFAULT_OG_IMAGE) },
     },

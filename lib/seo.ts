@@ -38,7 +38,15 @@ export function buildMetadata({ title, description, path }: MetadataInput): Meta
 // conhecimento — base para um painel de marca e para "travar" o SERP de "Trila".
 export const ORGANIZATION_ID = absoluteUrl('/#organization');
 
-export function buildOrganizationJsonLd() {
+// 👉 PARA ATIVAR O sameAs: cole aqui a URL do Google Business Profile (depois de
+// verificado) e/ou perfis de redes sociais. Enquanto a lista estiver vazia, o
+// schema NÃO emite `sameAs` (fica idêntico ao de hoje). Assim que tiver pelo
+// menos uma URL, ela aparece sozinha no JSON-LD da Organization — é o elo que
+// liga o site ao perfil e fecha a entidade de marca no Google.
+// Ex.: 'https://www.google.com/maps?cid=SEU_CID', 'https://instagram.com/...'.
+export const ORGANIZATION_SAME_AS: string[] = [];
+
+export function buildOrganizationJsonLd(sameAs: string[] = ORGANIZATION_SAME_AS) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -48,6 +56,8 @@ export function buildOrganizationJsonLd() {
     logo: absoluteUrl(DEFAULT_OG_IMAGE),
     description:
       'Software de gestão para salões, barbearias, clínicas de estética e spas.',
+    // Só inclui sameAs quando há perfis — evita um array vazio no schema.
+    ...(sameAs.length > 0 ? { sameAs } : {}),
   };
 }
 

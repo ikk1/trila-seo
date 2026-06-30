@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   ORGANIZATION_ID,
+  ORGANIZATION_SAME_AS,
   buildOrganizationJsonLd,
   buildSoftwareJsonLd,
   buildArticleJsonLd,
@@ -46,5 +47,24 @@ describe('entidade Organization consolidada por @id', () => {
     }) as any;
     const ids = new Set([org['@id'], sw.provider['@id'], article.publisher['@id']]);
     expect(ids.size).toBe(1);
+  });
+});
+
+describe('sameAs da Organization (pronto p/ colar a URL do GBP)', () => {
+  it('quando não há perfis cadastrados, o schema NÃO emite sameAs (sem array vazio)', () => {
+    const ld = buildOrganizationJsonLd([]) as any;
+    expect('sameAs' in ld).toBe(false);
+  });
+
+  it('quando há perfis, emite sameAs com as URLs', () => {
+    const gbp = 'https://www.google.com/maps?cid=123';
+    const ld = buildOrganizationJsonLd([gbp]) as any;
+    expect(ld.sameAs).toEqual([gbp]);
+  });
+
+  it('por padrão usa a lista ORGANIZATION_SAME_AS (hoje vazia → sem sameAs no ar)', () => {
+    const ld = buildOrganizationJsonLd() as any;
+    const temSameAs = 'sameAs' in ld;
+    expect(temSameAs).toBe(ORGANIZATION_SAME_AS.length > 0);
   });
 });

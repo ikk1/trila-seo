@@ -68,3 +68,13 @@ describe('sameAs da Organization (pronto p/ colar a URL do GBP)', () => {
     expect(temSameAs).toBe(ORGANIZATION_SAME_AS.length > 0);
   });
 });
+
+describe('parentOrganization (a Resilium faz a Trila)', () => {
+  it('Organization aponta a Resilium como parentOrganization (não como sameAs)', () => {
+    const ld = buildOrganizationJsonLd() as any;
+    expect(ld.parentOrganization).toBeDefined();
+    expect(ld.parentOrganization['@type']).toBe('Organization');
+    expect(ld.parentOrganization.name).toBe('Resilium');
+    expect(ld.parentOrganization.url).toBe('https://www.resilium.com.br');
+  });
+});

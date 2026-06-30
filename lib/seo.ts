@@ -46,6 +46,16 @@ export const ORGANIZATION_ID = absoluteUrl('/#organization');
 // Ex.: 'https://www.google.com/maps?cid=SEU_CID', 'https://instagram.com/...'.
 export const ORGANIZATION_SAME_AS: string[] = [];
 
+// A Resilium (software house) é quem constrói a Trila. A relação correta é
+// pai→produto via `parentOrganization` — NÃO `sameAs` (que diria, errado, que
+// Trila e Resilium são a mesma entidade e diluiria a marca "trila").
+export const PARENT_ORGANIZATION = {
+  '@type': 'Organization',
+  '@id': 'https://www.resilium.com.br/#organization',
+  name: 'Resilium',
+  url: 'https://www.resilium.com.br',
+} as const;
+
 export function buildOrganizationJsonLd(sameAs: string[] = ORGANIZATION_SAME_AS) {
   return {
     '@context': 'https://schema.org',
@@ -56,6 +66,7 @@ export function buildOrganizationJsonLd(sameAs: string[] = ORGANIZATION_SAME_AS)
     logo: absoluteUrl(DEFAULT_OG_IMAGE),
     description:
       'Software de gestão para salões, barbearias, clínicas de estética e spas.',
+    parentOrganization: PARENT_ORGANIZATION,
     // Só inclui sameAs quando há perfis — evita um array vazio no schema.
     ...(sameAs.length > 0 ? { sameAs } : {}),
   };

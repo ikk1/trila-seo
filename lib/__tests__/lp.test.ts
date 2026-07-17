@@ -7,6 +7,7 @@ import {
   LP_HERO_COPY,
 } from '@/lib/lp';
 import { APP_URL } from '@/lib/site';
+import { VERTICALS } from '@/lib/verticals';
 
 describe('landing pages de Ads', () => {
   it('expõe barbearia e salão como verticais com LP', () => {
@@ -17,7 +18,7 @@ describe('landing pages de Ads', () => {
   it('isLpVertical reconhece só os slugs com LP', () => {
     expect(isLpVertical('barbearia')).toBe(true);
     expect(isLpVertical('salao-de-beleza')).toBe(true);
-    expect(isLpVertical('spa')).toBe(false);
+    expect(isLpVertical('spa')).toBe(true);
     expect(isLpVertical('inexistente')).toBe(false);
   });
 
@@ -51,6 +52,23 @@ describe('landing pages de Ads', () => {
       expect(copy.headline.length).toBeGreaterThan(0);
       expect(copy.subheadline.length).toBeGreaterThan(0);
       expect(copy.services.length).toBeGreaterThanOrEqual(2);
+    }
+  });
+
+  it('toda vertical do site tem LP de Ads', () => {
+    const lpSlugs = [...LP_VERTICAL_SLUGS];
+    for (const v of VERTICALS) {
+      expect(lpSlugs).toContain(v.slug);
+    }
+  });
+
+  it('toda LP tem copy completa e sem promessa de WhatsApp', () => {
+    for (const slug of LP_VERTICAL_SLUGS) {
+      const copy = LP_HERO_COPY[slug];
+      expect(copy.headline.length).toBeGreaterThan(10);
+      expect(copy.services.length).toBeGreaterThanOrEqual(3);
+      const all = `${copy.eyebrow} ${copy.headline} ${copy.subheadline}`.toLowerCase();
+      expect(all).not.toMatch(/whats|zap|sms/);
     }
   });
 });

@@ -12,7 +12,7 @@ import { loadCityVerticalInsights } from '@/lib/city-insights';
 import { loadCityVerticalMarket } from '@/lib/city-market';
 import { VERTICALS } from '@/lib/verticals';
 import { resolveCityVertical, buildCityVerticalDescription, buildCityVerticalTitle, shouldIndexCityVertical, isCuratedCity } from '@/lib/city-pages';
-import { APP_URL } from '@/lib/site';
+import { buildRegisterUrl } from '@/lib/site';
 
 type PageProps = {
   params: Promise<{ uf: string; city: string; vertical: string }>;
@@ -141,7 +141,7 @@ export default async function CityVerticalPage({ params }: PageProps) {
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href={APP_URL}
+              href={buildRegisterUrl(`seo-${uf}-${city}-${vertical}`)}
               className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 py-3 font-semibold text-white hover:bg-primary-dark"
             >
               Acessar o sistema

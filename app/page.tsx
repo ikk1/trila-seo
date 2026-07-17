@@ -7,7 +7,7 @@ import {
   buildSoftwareJsonLd,
 } from '@/lib/seo';
 import { loadCities } from '@/lib/locations';
-import { APP_URL } from '@/lib/site';
+import { buildRegisterUrl } from '@/lib/site';
 import { TRIAL_LABEL, loadPlans, getLowestPlanPrice } from '@/lib/plans';
 import { VERTICALS } from '@/lib/verticals';
 
@@ -77,7 +77,7 @@ export default async function HomePage() {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
-                href={APP_URL}
+                href={buildRegisterUrl('home')}
                 className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 py-3 font-semibold text-white shadow-[var(--shadow-card-hover)] transition-colors hover:bg-primary-dark"
               >
                 Começar grátis

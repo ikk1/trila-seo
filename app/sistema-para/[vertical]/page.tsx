@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { JsonLd } from '@/components/JsonLd';
 import { loadCities } from '@/lib/locations';
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildMetadata } from '@/lib/seo';
-import { APP_URL } from '@/lib/site';
+import { buildRegisterUrl } from '@/lib/site';
 import { VERTICALS, getVerticalBySlug } from '@/lib/verticals';
 import { listGuidesByVertical } from '@/lib/guides';
 
@@ -65,7 +65,7 @@ export default async function VerticalPage({ params }: PageProps) {
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
-              href={APP_URL}
+              href={buildRegisterUrl(`seo-${content.slug}`)}
               className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 py-3 font-semibold text-white hover:bg-primary-dark"
             >
               Acessar o sistema

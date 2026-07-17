@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { JsonLd } from '@/components/JsonLd';
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildMetadata } from '@/lib/seo';
 import { loadPlans, formatBRL, getLowestPlanPrice, TRIAL_LABEL, TRIAL_DAYS, PLAN_CTA } from '@/lib/plans';
-import { APP_URL } from '@/lib/site';
+import { buildRegisterUrl } from '@/lib/site';
 
 // Revalida a cada 60s: mudanças de preço/recursos feitas no admin refletem no
 // site sem precisar de novo deploy. A página continua sendo servida estaticamente.
@@ -84,7 +84,7 @@ export default async function PlansPage() {
             </div>
 
             <a
-              href={APP_URL}
+              href={buildRegisterUrl('planos')}
               className={`mt-6 inline-flex min-h-11 items-center justify-center rounded-xl px-6 py-3 font-semibold transition-colors ${
                 plan.highlighted
                   ? 'bg-primary text-white hover:bg-primary-dark'
@@ -121,7 +121,7 @@ export default async function PlansPage() {
 
       <div className="mt-12 flex flex-col gap-3 sm:flex-row">
         <a
-          href={APP_URL}
+          href={buildRegisterUrl('planos-footer')}
           className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 py-3 font-semibold text-white hover:bg-primary-dark"
         >
           {PLAN_CTA}

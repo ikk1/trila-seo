@@ -3,10 +3,19 @@
 // cadastro. Cada vertical tem uma campanha de Ads própria, então o CTA carrega
 // UTMs para segmentar a origem no GA4 (a atribuição de conversão em si vem do
 // gclid/auto-tagging do Ads).
-import { APP_URL } from '@/lib/site';
+import { buildRegisterUrl } from '@/lib/site';
 
 /** Verticais que têm landing page de Ads. Comece enxuto: amplie conforme escalar. */
-export const LP_VERTICAL_SLUGS = ['barbearia', 'salao-de-beleza'] as const;
+export const LP_VERTICAL_SLUGS = [
+  'barbearia',
+  'salao-de-beleza',
+  'clinica-de-estetica',
+  'spa',
+  'manicure',
+  'nail-designer',
+  'centro-de-beleza',
+  'esteticista',
+] as const;
 
 export type LpVerticalSlug = (typeof LP_VERTICAL_SLUGS)[number];
 
@@ -41,6 +50,48 @@ export const LP_HERO_COPY: Record<LpVerticalSlug, LpHeroCopy> = {
       'Agenda, confirmação de horário, financeiro e comissões num sistema só. Pare de perder cliente no caderno e na memória.',
     services: ['Escova + Hidratação', 'Corte feminino', 'Coloração'],
   },
+  'clinica-de-estetica': {
+    eyebrow: 'Para clínicas de estética',
+    headline: 'Sua clínica de estética com a agenda cheia e zero falta',
+    subheadline:
+      'Agenda, confirmação de horário, financeiro e comissões num sistema só. Pare de perder cliente no caderno e na memória.',
+    services: ['Limpeza de pele', 'Drenagem linfática', 'Peeling'],
+  },
+  spa: {
+    eyebrow: 'Para spas',
+    headline: 'Seu spa com a agenda cheia e zero falta',
+    subheadline:
+      'Agenda, confirmação de horário, financeiro e comissões num sistema só. Pare de perder cliente no caderno e na memória.',
+    services: ['Massagem relaxante', 'Day spa', 'Pedras quentes'],
+  },
+  manicure: {
+    eyebrow: 'Para manicures',
+    headline: 'Sua agenda de manicure cheia e sem furo de horário',
+    subheadline:
+      'Agenda, confirmação de horário, financeiro e comissões num sistema só. Pare de perder cliente no caderno e na memória.',
+    services: ['Manicure + Pedicure', 'Esmaltação em gel', 'Spa dos pés'],
+  },
+  'nail-designer': {
+    eyebrow: 'Para nail designers',
+    headline: 'Seu studio de unhas com a agenda cheia e zero falta',
+    subheadline:
+      'Agenda, confirmação de horário, financeiro e comissões num sistema só. Pare de perder cliente no caderno e na memória.',
+    services: ['Alongamento em fibra', 'Banho de gel', 'Nail art'],
+  },
+  'centro-de-beleza': {
+    eyebrow: 'Para centros de beleza',
+    headline: 'Seu centro de beleza com a agenda cheia e zero falta',
+    subheadline:
+      'Agenda, confirmação de horário, financeiro e comissões num sistema só. Pare de perder cliente no caderno e na memória.',
+    services: ['Corte + Escova', 'Manicure', 'Depilação'],
+  },
+  esteticista: {
+    eyebrow: 'Para esteticistas',
+    headline: 'Sua agenda de esteticista cheia e sem falta de cliente',
+    subheadline:
+      'Agenda, confirmação de horário, financeiro e comissões num sistema só. Pare de perder cliente no caderno e na memória.',
+    services: ['Limpeza de pele', 'Design de sobrancelha', 'Depilação a cera'],
+  },
 };
 
 export function isLpVertical(slug: string): slug is LpVerticalSlug {
@@ -54,9 +105,5 @@ export function isLpPath(pathname: string | null): boolean {
 
 /** URL de cadastro no app, com UTMs para rastrear a origem da campanha no GA4. */
 export function buildLpRegisterUrl(slug: string): string {
-  const url = new URL('/register', APP_URL);
-  url.searchParams.set('utm_source', 'google');
-  url.searchParams.set('utm_medium', 'cpc');
-  url.searchParams.set('utm_campaign', `lp-${slug}`);
-  return url.toString();
+  return buildRegisterUrl(`lp-${slug}`, { source: 'google', medium: 'cpc' });
 }

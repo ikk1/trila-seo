@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { JsonLd } from '@/components/JsonLd';
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildMetadata } from '@/lib/seo';
 import { TRIAL_LABEL, PLAN_CTA } from '@/lib/plans';
-import { APP_URL } from '@/lib/site';
+import { buildRegisterUrl } from '@/lib/site';
 
 export const metadata = buildMetadata({
   title: 'IA para salão de beleza — um consultor que diz o que fazer hoje',
@@ -84,7 +84,7 @@ export default function AiPage() {
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <a
-                href={APP_URL}
+                href={buildRegisterUrl('ia')}
                 className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 py-3 font-semibold text-white shadow-[var(--shadow-card-hover)] transition-colors hover:bg-primary-dark"
               >
                 {PLAN_CTA}
@@ -174,7 +174,7 @@ export default function AiPage() {
 
         <div className="mt-12 flex flex-col gap-3 sm:flex-row">
           <a
-            href={APP_URL}
+            href={buildRegisterUrl('ia-footer')}
             className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 py-3 font-semibold text-white hover:bg-primary-dark"
           >
             {PLAN_CTA}

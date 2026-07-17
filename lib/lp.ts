@@ -3,7 +3,7 @@
 // cadastro. Cada vertical tem uma campanha de Ads própria, então o CTA carrega
 // UTMs para segmentar a origem no GA4 (a atribuição de conversão em si vem do
 // gclid/auto-tagging do Ads).
-import { APP_URL } from '@/lib/site';
+import { buildRegisterUrl } from '@/lib/site';
 
 /** Verticais que têm landing page de Ads. Comece enxuto: amplie conforme escalar. */
 export const LP_VERTICAL_SLUGS = ['barbearia', 'salao-de-beleza'] as const;
@@ -54,9 +54,5 @@ export function isLpPath(pathname: string | null): boolean {
 
 /** URL de cadastro no app, com UTMs para rastrear a origem da campanha no GA4. */
 export function buildLpRegisterUrl(slug: string): string {
-  const url = new URL('/register', APP_URL);
-  url.searchParams.set('utm_source', 'google');
-  url.searchParams.set('utm_medium', 'cpc');
-  url.searchParams.set('utm_campaign', `lp-${slug}`);
-  return url.toString();
+  return buildRegisterUrl(`lp-${slug}`, { source: 'google', medium: 'cpc' });
 }

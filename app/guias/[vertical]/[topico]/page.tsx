@@ -11,7 +11,7 @@ import {
   buildFaqJsonLd,
   buildMetadata,
 } from '@/lib/seo';
-import { APP_URL } from '@/lib/site';
+import { buildRegisterUrl } from '@/lib/site';
 
 type PageProps = { params: Promise<{ vertical: string; topico: string }> };
 
@@ -82,7 +82,7 @@ export default async function GuidePage({ params }: PageProps) {
       </section>
 
       <section className="mt-12 flex flex-col gap-3 sm:flex-row">
-        <a href={APP_URL} className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 py-3 font-semibold text-white hover:bg-primary-dark">
+        <a href={buildRegisterUrl(`guia-${vertical}`)} className="inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 py-3 font-semibold text-white hover:bg-primary-dark">
           Conhecer a Trila
         </a>
         <Link href={`/sistema-para-${vertical}`} className="inline-flex min-h-11 items-center justify-center rounded-xl border border-black/10 bg-white px-6 py-3 font-semibold text-text-main hover:bg-surface">

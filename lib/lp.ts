@@ -107,3 +107,17 @@ export function isLpPath(pathname: string | null): boolean {
 export function buildLpRegisterUrl(slug: string): string {
   return buildRegisterUrl(`lp-${slug}`, { source: 'google', medium: 'cpc' });
 }
+
+/**
+ * Anexa o gclid (auto-tagging do Google Ads) da query string da landing page
+ * ao href de cadastro, se presente. O gclid nunca está na URL de destino —
+ * só na URL da própria LP — por isso essa junção acontece no cliente, depois
+ * do mount, não na montagem server-side do href.
+ */
+export function withGclid(href: string, search: string): string {
+  const gclid = new URLSearchParams(search).get('gclid');
+  if (!gclid) return href;
+  const url = new URL(href);
+  url.searchParams.set('gclid', gclid);
+  return url.toString();
+}

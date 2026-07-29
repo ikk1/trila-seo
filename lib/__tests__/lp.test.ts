@@ -5,6 +5,7 @@ import {
   buildLpRegisterUrl,
   isLpPath,
   LP_HERO_COPY,
+  withGclid,
 } from '@/lib/lp';
 import { APP_URL } from '@/lib/site';
 import { VERTICALS } from '@/lib/verticals';
@@ -34,6 +35,33 @@ describe('landing pages de Ads', () => {
     expect(new URL(buildLpRegisterUrl('salao-de-beleza')).searchParams.get('utm_campaign')).toBe(
       'lp-salao-de-beleza',
     );
+  });
+
+  it('withGclid anexa o gclid da query string ao href quando presente', () => {
+    const href = buildLpRegisterUrl('barbearia');
+    const result = withGclid(href, '?gclid=Cj0KCQiA1abc123');
+    expect(new URL(result).searchParams.get('gclid')).toBe('Cj0KCQiA1abc123');
+  });
+
+  it('withGclid devolve o href intacto quando não há gclid na query string', () => {
+    const href = buildLpRegisterUrl('barbearia');
+    const result = withGclid(href, '?utm_extra=algo');
+    expect(result).toBe(href);
+  });
+
+  it('withGclid devolve o href intacto quando a query string está vazia', () => {
+    const href = buildLpRegisterUrl('barbearia');
+    expect(withGclid(href, '')).toBe(href);
+  });
+
+  it('withGclid preserva os UTMs já presentes no href ao somar o gclid', () => {
+    const href = buildLpRegisterUrl('salao-de-beleza');
+    const result = withGclid(href, '?gclid=xyz789');
+    const url = new URL(result);
+    expect(url.searchParams.get('utm_source')).toBe('google');
+    expect(url.searchParams.get('utm_medium')).toBe('cpc');
+    expect(url.searchParams.get('utm_campaign')).toBe('lp-salao-de-beleza');
+    expect(url.searchParams.get('gclid')).toBe('xyz789');
   });
 
   it('isLpPath identifica rotas de LP (onde o header/footer somem)', () => {

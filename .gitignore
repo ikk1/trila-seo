@@ -45,3 +45,6 @@ next-env.d.ts
 
 # Dump bruto do BigQuery (dados RFB) — não versionar
 scripts/data/
+
+# Git worktrees locais (isolamento de tasks)
+.worktrees/

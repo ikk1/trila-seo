@@ -8,6 +8,7 @@ import {
   LP_HERO_COPY,
   type LpVerticalSlug,
 } from '@/lib/lp';
+import { RegisterCta } from '@/components/RegisterCta';
 
 type PageProps = {
   params: Promise<{ vertical: string }>;
@@ -28,18 +29,6 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     // página de SEO sistema-para/[vertical] nem é vista como conteúdo duplicado.
     robots: { index: false, follow: false },
   };
-}
-
-/** Botão de conversão. Mesmo verbo do começo ao fim do funil: "Criar conta grátis". */
-function PrimaryCta({ href, className = '' }: { href: string; className?: string }) {
-  return (
-    <a
-      href={href}
-      className={`inline-flex min-h-12 items-center justify-center rounded-xl bg-primary px-7 py-3 text-base font-semibold text-white shadow-lg shadow-primary/25 transition-colors hover:bg-primary-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${className}`}
-    >
-      Criar conta grátis
-    </a>
-  );
 }
 
 /** Elemento-assinatura: a agenda do dia da barbearia, cheia — a promessa, visível. */
@@ -148,7 +137,7 @@ export default async function LpPage({ params }: PageProps) {
             <p className="mt-5 max-w-xl text-lg leading-8 text-white/70">{copy.subheadline}</p>
 
             <div className="mt-9">
-              <PrimaryCta href={registerUrl} />
+              <RegisterCta href={registerUrl} />
               <p className="mt-3 text-sm text-white/45">14 dias grátis · sem cartão de crédito</p>
             </div>
 
@@ -232,7 +221,7 @@ export default async function LpPage({ params }: PageProps) {
             <h2 className="text-2xl text-white sm:text-3xl">Comece com a agenda de amanhã.</h2>
             <p className="mt-2 text-white/60">14 dias grátis, sem cartão. Leva poucos minutos.</p>
           </div>
-          <PrimaryCta href={registerUrl} className="shrink-0" />
+          <RegisterCta href={registerUrl} className="shrink-0" />
         </div>
       </section>
 
